@@ -11,8 +11,9 @@ struct ContentView: View {
         .padding()
         .onAppear {
             //testFetchNearestStations()
-            //testFetchSearch()
+            testFetchSearch()
             //testFetchSchedule()
+            //testFetchThread()
         }
     }
 }
