@@ -10,18 +10,22 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            //testFetchStations()
-            //testFetchSearch()
-            //testFetchSchedule()
-            //testFetchThread()
-            //testFetchGeography()
-            //testFetchCarrier()
-            //testFetchStationsList()
-            testFetchCopyright()
+            testServices()
         }
     }
 }
 
 #Preview {
     ContentView()
+}
+
+func testServices(){
+    testFetchStations()
+    testFetchSearch()
+    testFetchSchedule()
+    testFetchThread()
+    testFetchGeography()
+    testFetchCarrier()
+    testFetchStationsList()
+    testFetchCopyright()
 }
