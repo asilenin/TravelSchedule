@@ -286,7 +286,7 @@ paths:
   /v3.0/stations_list/:
     get:
       tags:
-        - Stations
+        - StationsList
       summary: Список всех доступных станций
       operationId: getAllStations
       parameters:
