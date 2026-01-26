@@ -1,0 +1,67 @@
+import SwiftUI
+import OpenAPIRuntime
+import OpenAPIURLSession
+
+typealias Segments = Components.Schemas.Segments
+
+protocol SearchServiceProtocol {
+    func getScheduleBetweenStations(from: String, to: String, date: String?) async throws -> Segments
+}
+
+final class SearchService: SearchServiceProtocol {
+    private let client: Client
+    private let apikey: String
+    
+    init(client: Client, apikey: String) {
+        self.client = client
+        self.apikey = apikey
+    }
+    
+    func getScheduleBetweenStations(from: String, to: String, date: String?) async throws -> Segments {
+        let response = try await client.getSchedualBetweenStations(query: .init(
+            apikey: apikey,
+            from: from,
+            to: to,
+            date: date
+        ))
+        return try response.ok.body.json
+    }
+}
+
+func testFetchSearch() {
+    guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
+        fatalError("API key is missing")
+    }
+    
+    Task {
+        do {
+            let client = Client(
+                serverURL: try Servers.Server1.url(),
+                transport: URLSessionTransport()
+            )
+            
+            let service = SearchService(
+                client: client,
+                apikey: apiKey
+            )
+            print("Fetching Schedule Between Stations...")
+            let scheduleResult = try await service.getScheduleBetweenStations(
+                from: "c146",
+                to: "c213",
+                date: "2026-01-25"
+            )
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            var jsonString: String?
+            if let jsonData = try? encoder.encode(scheduleResult),
+               let dataString = String(data: jsonData, encoding: .utf8) {
+                jsonString = dataString
+                print("Successfully fetched schedule:\n\(jsonString!)")
+            } else {
+                print("Successfully fetched schedule (debug description): \(scheduleResult)")
+            }
+        } catch {
+            print("Error fetching schedule: \(error)")
+        }
+    }
+}
