@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 

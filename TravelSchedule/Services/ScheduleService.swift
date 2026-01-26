@@ -1,5 +1,5 @@
-import OpenAPIRuntime
 import Foundation
+import OpenAPIRuntime
 import OpenAPIURLSession
 
 typealias ScheduleResponse = Components.Schemas.ScheduleResponse

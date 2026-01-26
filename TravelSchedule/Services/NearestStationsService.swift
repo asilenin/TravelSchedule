@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
@@ -28,7 +28,7 @@ final class NearestStationsService: NearestStationsServiceProtocol {
   }
 }
 
-func testFetchNearestStations() {
+func testFetchStations() {
     guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
         fatalError("API key is missing")
     }

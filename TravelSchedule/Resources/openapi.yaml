@@ -224,7 +224,7 @@ paths:
       tags:
         - Geography
       summary: Ближайший город
-      operationId: getNearestCity
+      operationId: getNearestSettlement
       parameters:
         - $ref: '#/components/parameters/ApiKey'
         - name: lat
