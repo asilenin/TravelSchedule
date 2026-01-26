@@ -28,7 +28,7 @@ final class NearestStationsService: NearestStationsServiceProtocol {
   }
 }
 
-func testFetchStations() {
+func testFetchNearestStations() {
     guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
         fatalError("API key is missing")
     }

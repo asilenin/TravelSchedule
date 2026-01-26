@@ -10,8 +10,9 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            testFetchStations()
-            testFetchSearch()
+            //testFetchNearestStations()
+            //testFetchSearch()
+            //testFetchSchedule()
         }
     }
 }
