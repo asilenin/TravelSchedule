@@ -16,7 +16,8 @@ struct ContentView: View {
             //testFetchThread()
             //testFetchGeography()
             //testFetchCarrier()
-            testFetchStationsList()
+            //testFetchStationsList()
+            testFetchCopyright()
         }
     }
 }
