@@ -1,6 +1,5 @@
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import Logging
 
 typealias Segments = Components.Schemas.Segments
 
@@ -34,22 +33,12 @@ final class SearchService: SearchServiceProtocol {
 func testFetchSearch() {
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = SearchService(
-                client: client,
-                apikey: apiKey
-            )
-            print("Fetching Schedule Between Stations...")
+            let service = try ServiceFactory.makeSearchService()
+            AppLogger.shared.notice("[SearchService]:\(#line)] \(#function) Fetching Schedule Between Stations...")
             let scheduleResult = try await service.getScheduleBetweenStations(
-                from: "c146",
-                to: "c213",
-                date: "2026-01-25"
+                from: TestConstants.SearchServiceFrom,
+                to: TestConstants.SearchServiceTo,
+                date: TestConstants.SearchServiceDate
             )
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -57,12 +46,12 @@ func testFetchSearch() {
             if let jsonData = try? encoder.encode(scheduleResult),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                print("Successfully fetched schedule:\n\(jsonString!)")
+                AppLogger.shared.info("[SearchService]:\(#line)] \(#function) Successfully fetched schedule:\n\(jsonString!)")
             } else {
-                print("Successfully fetched schedule (debug description): \(scheduleResult)")
+                AppLogger.shared.info("[SearchService]:\(#line)] \(#function) Successfully fetched schedule (debug description): \(scheduleResult)")
             }
         } catch {
-            print("Error fetching schedule: \(error)")
+            AppLogger.shared.error("[SearchService]:\(#line)] \(#function) Error fetching schedule: \(error)")
         }
     }
 }

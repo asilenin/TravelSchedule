@@ -1,6 +1,6 @@
 import Foundation
+import Logging
 import OpenAPIRuntime
-import OpenAPIURLSession
 
 typealias StationsList = Components.Schemas.AllStationsResponse
 
@@ -25,7 +25,7 @@ final class StationsListService: StationsListServiceProtocol {
             apikey: apikey
         ))
         let responseBody = try response.ok.body.text_html_charset_utf_hyphen_8
-        let limit = 50 * 1024 * 1024
+        let limit = ServiceConstants.StationsListServiceGetAllStationsTimeLimit
         let fullData = try await Data(collecting: responseBody, upTo: limit)
         let allStations = try JSONDecoder().decode(StationsList.self, from: fullData)
         return allStations
@@ -35,22 +35,13 @@ final class StationsListService: StationsListServiceProtocol {
 func testFetchStationsList(){
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let service = StationsListService(
-                client: client,
-                apikey: apiKey
-            )
-            print("Fetching allStations...")
+            let service = try ServiceFactory.makeStationsListService()
+            AppLogger.shared.notice("[StationsListService]:\(#line)] \(#function) Fetching allStations...")
             let allStations = try await service.getAllStations(
             )
-            print("Successfully fetched allStations")
+            AppLogger.shared.info("[StationsListService]:\(#line)] \(#function) Successfully fetched allStations \(allStations)")
         } catch {
-            print("Error fetching allStations: \(error)")
+            AppLogger.shared.error("[StationsListService]:\(#line)] \(#function) Error fetching allStations: \(error)")
         }
     }
 }

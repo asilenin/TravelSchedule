@@ -1,6 +1,4 @@
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
 import Logging
 
 typealias Carrier = Components.Schemas.CarrierResponse
@@ -33,20 +31,10 @@ final class CarrierService: CarrierServiceProtocol {
 func testFetchCarrier() {
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let service = CarrierService(
-                client: client,
-                apikey: apiKey
-            )
-            
+            let service = try ServiceFactory.makeCarrierService()
             AppLogger.shared.notice("[CarrierService]:\(#line)] \(#function) Fetching info...")
             let info = try await service.getCarrierInfo(
-                code: "680"
+                code: TestConstants.CarrierServiceCode
             )
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -54,9 +42,9 @@ func testFetchCarrier() {
             if let jsonData = try? encoder.encode(info),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                AppLogger.shared.notice("[CarrierService]:\(#line)] \(#function) Successfully fetched info:\n\(jsonString!)")
+                AppLogger.shared.info("[CarrierService]:\(#line)] \(#function) Successfully fetched info:\n\(jsonString!)")
             } else {
-                AppLogger.shared.notice("[CarrierService]:\(#line)] \(#function) Successfully fetched info (debug description): \(info)")
+                AppLogger.shared.info("[CarrierService]:\(#line)] \(#function) Successfully fetched info (debug description): \(info)")
             }
         } catch {
             AppLogger.shared.error("[CarrierService]:\(#line)] \(#function) Error fetching info: \(error)")

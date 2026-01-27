@@ -1,6 +1,5 @@
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import Logging
 
 typealias NearestStations = Components.Schemas.Stations
 
@@ -35,28 +34,16 @@ func testFetchStations() {
     
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = NearestStationsService(
-                client: client,
-                apikey: apiKey
-            )
-            
-            print("Fetching stations...")
+            let service = try ServiceFactory.makeNearestStationsService()
+            AppLogger.shared.notice("[NearestStationsService]:\(#line)] \(#function) Fetching stations...")
             let stations = try await service.getNearestStations(
-                lat: 59.864177,
-                lng: 30.319163,
-                distance: 50
+                lat: TestConstants.NearestStationsServiceLat,
+                lng: TestConstants.NearestStationsServiceLong,
+                distance: TestConstants.NearestStationsServiceDistance
             )
-            
-            print("Successfully fetched stations: \(stations)")
+            AppLogger.shared.info("[NearestStationsService]:\(#line)] \(#function) Successfully fetched stations: \(stations)")
         } catch {
-            print("Error fetching stations: \(error)")
+            AppLogger.shared.error("[NearestStationsService]:\(#line)] \(#function) Error fetching stations: \(error)")
         }
     }
 }

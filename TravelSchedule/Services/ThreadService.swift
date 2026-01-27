@@ -1,6 +1,5 @@
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import Logging
 
 typealias Thread = Components.Schemas.ThreadStationsResponse
 
@@ -33,19 +32,10 @@ final class ThreadService: ThreadServiceProtocol {
 func testFetchThread() {
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let service = ThreadService(
-                client: client,
-                apikey: apiKey
-            )
-            print("Fetching thread...")
+            let service = try ServiceFactory.makeThreadService()
+            AppLogger.shared.notice("[ThreadService]:\(#line)] \(#function) Fetching thread...")
             let schedule = try await service.getRouteStations(
-                uid: "SU-1524_260126_c26_12",
+                uid: TestConstants.ThreadServiceUID,
                 date: nil
             )
             let encoder = JSONEncoder()
@@ -54,15 +44,14 @@ func testFetchThread() {
             if let jsonData = try? encoder.encode(schedule),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                print("Successfully fetched thread:\n\(jsonString!)")
+                AppLogger.shared.info("[ThreadService]:\(#line)] \(#function) Successfully fetched thread:\n\(jsonString!)")
             } else {
-                print("Successfully fetched thread (debug description): \(schedule)")
+                AppLogger.shared.info("[ThreadService]:\(#line)] \(#function) Successfully fetched thread (debug description): \(schedule)")
             }
-            if let arrivalString = schedule.stops?.first?.arrival {
-                print("Дата прибытия: \(arrivalString)")
+            if let arrivalString = schedule.stops?.first?.arrival {AppLogger.shared.info("[ThreadService]:\(#line)] \(#function) Arrival Date: \(arrivalString)")
             }
         } catch {
-            print("Error fetching thread: \(error)")
+            AppLogger.shared.error("[ThreadService]:\(#line)] \(#function) Error fetching thread: \(error)")
         }
     }
 }

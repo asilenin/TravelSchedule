@@ -1,6 +1,5 @@
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import Logging
 
 typealias ScheduleResponse = Components.Schemas.ScheduleResponse
 
@@ -33,21 +32,11 @@ final class ScheduleService: ScheduleServiceProtocol {
 func testFetchSchedule() {
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = ScheduleService(
-                client: client,
-                apikey: apiKey
-            )
-            print("Fetching Schedule...")
+            let service = try ServiceFactory.makeScheduleService()
+            AppLogger.shared.notice("[ScheduleService]:\(#line)] \(#function) Fetching Schedule...")
             let schedule = try await service.getStationSchedule(
-                station: "s9600213",
-                date: "2026-01-26"
+                station: TestConstants.ScheduleServiceStation,
+                date: TestConstants.ScheduleServiceDate
             )
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -55,12 +44,12 @@ func testFetchSchedule() {
             if let jsonData = try? encoder.encode(schedule),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                print("Successfully fetched schedule:\n\(jsonString!)")
+                AppLogger.shared.info("[ScheduleService]:\(#line)] \(#function) Successfully fetched schedule:\n\(jsonString!)")
             } else {
-                print("Successfully fetched schedule (debug description): \(schedule)")
+                AppLogger.shared.info("[ScheduleService]:\(#line)] \(#function) Successfully fetched schedule (debug description): \(schedule)")
             }
         } catch {
-            print("Error fetching schedule: \(error)")
+            AppLogger.shared.error("[ScheduleService]:\(#line)] \(#function) Error fetching schedule: \(error)")
         }
     }
 }

@@ -1,6 +1,5 @@
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import Logging
 
 typealias Copyright = Components.Schemas.CopyrightWrapper
 
@@ -31,22 +30,12 @@ final class CopyrightService: CopyrightServiceProtocol {
 func testFetchCopyright(){
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let service = CopyrightService(
-                client: client,
-                apikey: apiKey
-            )
-            print("Fetching Copyright...")
-            let copyright = try await service.getCopyright(
-            )
-            print("Successfully fetched copyright: \(copyright)")
+            let service = try ServiceFactory.makeCopyrightService()
+            AppLogger.shared.notice("[CopyrightService]:\(#line)] \(#function) Fetching copyright...")
+            let copyright = try await service.getCopyright()
+            AppLogger.shared.info("[CopyrightService]:\(#line)] \(#function) Successfully fetched copyright: \(copyright)")
         } catch {
-            print("Error fetching copyright: \(error)")
+            AppLogger.shared.error("[CopyrightService]:\(#line)] \(#function) Error fetching copyright: \(error)")
         }
     }
 }

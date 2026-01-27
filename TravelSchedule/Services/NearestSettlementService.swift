@@ -1,6 +1,5 @@
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
+import Logging
 
 typealias NearestSettlement = Components.Schemas.NearestCityResponse
 
@@ -34,26 +33,16 @@ final class NearestSettlementService: NearestSettlementServiceProtocol {
 func testFetchGeography() {
     Task {
         do {
-            let apiKey = try APIConfiguration.yandexRaspAPIKey()
-            
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = NearestSettlementService(
-                client: client,
-                apikey: apiKey
-            )
-            print("Fetching stations...")
+            let service = try ServiceFactory.makeNearestSettlementService()
+            AppLogger.shared.notice("[NearestSettlementService]:\(#line)] \(#function) Fetching stations...")
             let stations = try await service.getNearestSettlement(
-                lat: 59.864177,
-                lng: 30.319163,
-                distance: 50
+                lat: TestConstants.NearestSettlementServiceLat,
+                lng: TestConstants.NearestSettlementServiceLong,
+                distance: TestConstants.NearestSettlementServiceDistance
             )
-            print("Successfully fetched stations: \(stations)")
+            AppLogger.shared.info("[NearestSettlementService]:\(#line)] \(#function) Successfully fetched stations: \(stations)")
         } catch {
-            print("Error fetching stations: \(error)")
+            AppLogger.shared.error("[NearestSettlementService]:\(#line)] \(#function) Error fetching stations: \(error)")
         }
     }
 }
