@@ -9,14 +9,17 @@ protocol ScheduleServiceProtocol {
 }
 
 final class ScheduleService: ScheduleServiceProtocol {
+    // MARK: - Private Properties
     private let client: Client
     private let apikey: String
     
+    // MARK: - Initializers
     init(client: Client, apikey: String) {
         self.client = client
         self.apikey = apikey
     }
     
+    // MARK: - Public Methods
     func getStationSchedule(station: String, date: String?) async throws -> ScheduleResponse {
         let response = try await client.getStationSchedule(query: .init(
             apikey: apikey,
@@ -28,12 +31,10 @@ final class ScheduleService: ScheduleServiceProtocol {
 }
 
 func testFetchSchedule() {
-    guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
-        fatalError("API key is missing")
-    }
-    
     Task {
         do {
+            let apiKey = try APIConfiguration.yandexRaspAPIKey()
+            
             let client = Client(
                 serverURL: try Servers.Server1.url(),
                 transport: URLSessionTransport()

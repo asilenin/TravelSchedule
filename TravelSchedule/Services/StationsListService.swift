@@ -9,14 +9,17 @@ protocol StationsListServiceProtocol {
 }
 
 final class StationsListService: StationsListServiceProtocol {
+    // MARK: - Private Properties
     private let client: Client
     private let apikey: String
     
+    // MARK: - Initializers
     init(client: Client, apikey: String) {
         self.client = client
         self.apikey = apikey
     }
     
+    // MARK: - Public Methods
     func getAllStations(limit: Int? = nil) async throws -> StationsList {
         let response = try await client.getAllStations(query: .init(
             apikey: apikey
@@ -30,12 +33,10 @@ final class StationsListService: StationsListServiceProtocol {
 }
 
 func testFetchStationsList(){
-    guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
-        fatalError("API key is missing")
-    }
-    
     Task {
         do {
+            let apiKey = try APIConfiguration.yandexRaspAPIKey()
+            
             let client = Client(
                 serverURL: try Servers.Server1.url(),
                 transport: URLSessionTransport()

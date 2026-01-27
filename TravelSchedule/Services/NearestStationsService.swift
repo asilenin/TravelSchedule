@@ -5,36 +5,38 @@ import OpenAPIURLSession
 typealias NearestStations = Components.Schemas.Stations
 
 protocol NearestStationsServiceProtocol {
-  func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations
+    func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations
 }
 
 final class NearestStationsService: NearestStationsServiceProtocol {
-  private let client: Client
-  private let apikey: String
-  
-  init(client: Client, apikey: String) {
-    self.client = client
-    self.apikey = apikey
-  }
-  
-  func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations {
-    let response = try await client.getNearestStations(query: .init(
-        apikey: apikey,
-        lat: lat,
-        lng: lng,
-        distance: distance
-    ))
-    return try response.ok.body.json
-  }
+    // MARK: - Private Properties
+    private let client: Client
+    private let apikey: String
+    
+    // MARK: - Initializers
+    init(client: Client, apikey: String) {
+        self.client = client
+        self.apikey = apikey
+    }
+    
+    // MARK: - Public Methods
+    func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations {
+        let response = try await client.getNearestStations(query: .init(
+            apikey: apikey,
+            lat: lat,
+            lng: lng,
+            distance: distance
+        ))
+        return try response.ok.body.json
+    }
 }
 
 func testFetchStations() {
-    guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
-        fatalError("API key is missing")
-    }
     
     Task {
         do {
+            let apiKey = try APIConfiguration.yandexRaspAPIKey()
+            
             let client = Client(
                 serverURL: try Servers.Server1.url(),
                 transport: URLSessionTransport()

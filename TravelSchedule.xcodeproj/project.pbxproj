@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		476474552F29005100E0D0EF /* InMemoryLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 476474542F29005100E0D0EF /* InMemoryLogging */; };
+		476474572F29005100E0D0EF /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 476474562F29005100E0D0EF /* Logging */; };
 		47AAE5AF2F25111500C20B8B /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 47AAE5AE2F25111500C20B8B /* OpenAPIRuntime */; };
 		47AAE5B22F25112400C20B8B /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = 47AAE5B12F25112400C20B8B /* OpenAPIURLSession */; };
 /* End PBXBuildFile section */
@@ -42,6 +44,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				47AAE5B22F25112400C20B8B /* OpenAPIURLSession in Frameworks */,
+				476474552F29005100E0D0EF /* InMemoryLogging in Frameworks */,
+				476474572F29005100E0D0EF /* Logging in Frameworks */,
 				47AAE5AF2F25111500C20B8B /* OpenAPIRuntime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,6 +92,8 @@
 			packageProductDependencies = (
 				47AAE5AE2F25111500C20B8B /* OpenAPIRuntime */,
 				47AAE5B12F25112400C20B8B /* OpenAPIURLSession */,
+				476474542F29005100E0D0EF /* InMemoryLogging */,
+				476474562F29005100E0D0EF /* Logging */,
 			);
 			productName = TravelSchedule;
 			productReference = 47B319342F1AAD0700B1213E /* TravelSchedule.app */;
@@ -121,6 +127,7 @@
 				47AAE5A82F2510DD00C20B8B /* XCRemoteSwiftPackageReference "swift-openapi-generator" */,
 				47AAE5AD2F25111500C20B8B /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
 				47AAE5B02F25112400C20B8B /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
+				476474532F29005100E0D0EF /* XCRemoteSwiftPackageReference "swift-log" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 47B319352F1AAD0700B1213E /* Products */;
@@ -375,6 +382,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		476474532F29005100E0D0EF /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log?tab=readme-ov-file";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.1;
+			};
+		};
 		47AAE5A82F2510DD00C20B8B /* XCRemoteSwiftPackageReference "swift-openapi-generator" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-openapi-generator";
@@ -402,6 +417,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		476474542F29005100E0D0EF /* InMemoryLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 476474532F29005100E0D0EF /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = InMemoryLogging;
+		};
+		476474562F29005100E0D0EF /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 476474532F29005100E0D0EF /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
 		47AAE5AE2F25111500C20B8B /* OpenAPIRuntime */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 47AAE5AD2F25111500C20B8B /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */;

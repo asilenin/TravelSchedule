@@ -1,6 +1,7 @@
 import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
+import Logging
 
 typealias Carrier = Components.Schemas.CarrierResponse
 
@@ -9,14 +10,17 @@ protocol CarrierServiceProtocol {
 }
 
 final class CarrierService: CarrierServiceProtocol {
+    // MARK: - Private Properties
     private let client: Client
     private let apikey: String
     
+    // MARK: - Initializers
     init(client: Client, apikey: String) {
         self.client = client
         self.apikey = apikey
     }
     
+    // MARK: - Public Methods
     func getCarrierInfo(code: String) async throws -> Carrier {
         let response = try await client.getCarrierInfo(query: .init(
             apikey: apikey,
@@ -27,12 +31,10 @@ final class CarrierService: CarrierServiceProtocol {
 }
 
 func testFetchCarrier() {
-    guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
-        fatalError("API key is missing")
-    }
-    
     Task {
         do {
+            let apiKey = try APIConfiguration.yandexRaspAPIKey()
+            
             let client = Client(
                 serverURL: try Servers.Server1.url(),
                 transport: URLSessionTransport()
@@ -41,7 +43,8 @@ func testFetchCarrier() {
                 client: client,
                 apikey: apiKey
             )
-            print("Fetching info...")
+            
+            AppLogger.shared.notice("[CarrierService]:\(#line)] \(#function) Fetching info...")
             let info = try await service.getCarrierInfo(
                 code: "680"
             )
@@ -51,12 +54,12 @@ func testFetchCarrier() {
             if let jsonData = try? encoder.encode(info),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                print("Successfully fetched info:\n\(jsonString!)")
+                AppLogger.shared.notice("[CarrierService]:\(#line)] \(#function) Successfully fetched info:\n\(jsonString!)")
             } else {
-                print("Successfully fetched info (debug description): \(info)")
+                AppLogger.shared.notice("[CarrierService]:\(#line)] \(#function) Successfully fetched info (debug description): \(info)")
             }
         } catch {
-            print("Error fetching info: \(error)")
+            AppLogger.shared.error("[CarrierService]:\(#line)] \(#function) Error fetching info: \(error)")
         }
     }
 }

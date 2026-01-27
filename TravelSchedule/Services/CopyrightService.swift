@@ -9,14 +9,17 @@ protocol CopyrightServiceProtocol {
 }
 
 final class CopyrightService: CopyrightServiceProtocol {
+    // MARK: - Private Properties
     private let client: Client
     private let apikey: String
     
+    // MARK: - Initializers
     init(client: Client, apikey: String) {
         self.client = client
         self.apikey = apikey
     }
     
+    // MARK: - Public Methods
     func getCopyright() async throws -> Copyright {
         let response = try await client.getCopyright(query: .init(
             apikey: apikey
@@ -26,12 +29,10 @@ final class CopyrightService: CopyrightServiceProtocol {
 }
 
 func testFetchCopyright(){
-    guard let apiKey = Bundle.main.infoDictionary?["YandexStationsAPIKey"] as? String else {
-        fatalError("API key is missing")
-    }
-    
     Task {
         do {
+            let apiKey = try APIConfiguration.yandexRaspAPIKey()
+            
             let client = Client(
                 serverURL: try Servers.Server1.url(),
                 transport: URLSessionTransport()
