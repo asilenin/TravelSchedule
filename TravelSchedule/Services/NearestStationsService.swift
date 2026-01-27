@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 
 typealias NearestStations = Components.Schemas.Stations
 
@@ -35,15 +34,15 @@ func testFetchStations() {
     Task {
         do {
             let service = try ServiceFactory.makeNearestStationsService()
-            AppLogger.shared.notice("[NearestStationsService]:\(#line)] \(#function) Fetching stations...")
+            print("[NearestStationsService]:\(#line)] \(#function) Fetching stations...")
             let stations = try await service.getNearestStations(
                 lat: TestConstants.NearestStationsServiceLat,
                 lng: TestConstants.NearestStationsServiceLong,
                 distance: TestConstants.NearestStationsServiceDistance
             )
-            AppLogger.shared.info("[NearestStationsService]:\(#line)] \(#function) Successfully fetched stations: \(stations)")
+            print("[NearestStationsService]:\(#line)] \(#function) Successfully fetched stations: \(stations)")
         } catch {
-            AppLogger.shared.error("[NearestStationsService]:\(#line)] \(#function) Error fetching stations: \(error)")
+            print("[NearestStationsService]:\(#line)] \(#function) Error fetching stations: \(error)")
         }
     }
 }

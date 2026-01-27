@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 
 typealias Segments = Components.Schemas.Segments
 
@@ -34,7 +33,7 @@ func testFetchSearch() {
     Task {
         do {
             let service = try ServiceFactory.makeSearchService()
-            AppLogger.shared.notice("[SearchService]:\(#line)] \(#function) Fetching Schedule Between Stations...")
+            print("[SearchService]:\(#line)] \(#function) Fetching Schedule Between Stations...")
             let scheduleResult = try await service.getScheduleBetweenStations(
                 from: TestConstants.SearchServiceFrom,
                 to: TestConstants.SearchServiceTo,
@@ -46,12 +45,12 @@ func testFetchSearch() {
             if let jsonData = try? encoder.encode(scheduleResult),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                AppLogger.shared.info("[SearchService]:\(#line)] \(#function) Successfully fetched schedule:\n\(jsonString!)")
+                print("[SearchService]:\(#line)] \(#function) Successfully fetched schedule:\n\(jsonString!)")
             } else {
-                AppLogger.shared.info("[SearchService]:\(#line)] \(#function) Successfully fetched schedule (debug description): \(scheduleResult)")
+                print("[SearchService]:\(#line)] \(#function) Successfully fetched schedule (debug description): \(scheduleResult)")
             }
         } catch {
-            AppLogger.shared.error("[SearchService]:\(#line)] \(#function) Error fetching schedule: \(error)")
+            print("[SearchService]:\(#line)] \(#function) Error fetching schedule: \(error)")
         }
     }
 }

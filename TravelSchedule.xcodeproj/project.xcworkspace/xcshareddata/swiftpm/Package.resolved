@@ -1,5 +1,5 @@
 {
-  "originHash" : "a4c8827e626168541be0eb4a749dcfd356ea3c409e66aa1ad1c2a1f219d7f4f8",
+  "originHash" : "84e6b351a277bf91ab6a4a07344af2e18b312828f04e8e7b71ec8b1793165a38",
   "pins" : [
     {
       "identity" : "openapikit",
@@ -44,15 +44,6 @@
       "state" : {
         "revision" : "45eb0224913ea070ec4fba17291b9e7ecf4749ca",
         "version" : "1.5.1"
-      }
-    },
-    {
-      "identity" : "swift-log?tab=readme-ov-file",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-log?tab=readme-ov-file",
-      "state" : {
-        "revision" : "2778fd4e5a12a8aaa30a3ee8285f4ce54c5f3181",
-        "version" : "1.9.1"
       }
     },
     {

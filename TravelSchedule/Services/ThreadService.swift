@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 
 typealias Thread = Components.Schemas.ThreadStationsResponse
 
@@ -33,7 +32,7 @@ func testFetchThread() {
     Task {
         do {
             let service = try ServiceFactory.makeThreadService()
-            AppLogger.shared.notice("[ThreadService]:\(#line)] \(#function) Fetching thread...")
+            print("[ThreadService]:\(#line)] \(#function) Fetching thread...")
             let schedule = try await service.getRouteStations(
                 uid: TestConstants.ThreadServiceUID,
                 date: nil
@@ -44,14 +43,15 @@ func testFetchThread() {
             if let jsonData = try? encoder.encode(schedule),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                AppLogger.shared.info("[ThreadService]:\(#line)] \(#function) Successfully fetched thread:\n\(jsonString!)")
+                print("[ThreadService]:\(#line)] \(#function) Successfully fetched thread:\n\(jsonString!)")
             } else {
-                AppLogger.shared.info("[ThreadService]:\(#line)] \(#function) Successfully fetched thread (debug description): \(schedule)")
+                print("[ThreadService]:\(#line)] \(#function) Successfully fetched thread (debug description): \(schedule)")
             }
-            if let arrivalString = schedule.stops?.first?.arrival {AppLogger.shared.info("[ThreadService]:\(#line)] \(#function) Arrival Date: \(arrivalString)")
+            if let arrivalString = schedule.stops?.first?.arrival {
+                print("[ThreadService]:\(#line)] \(#function) Arrival Date: \(arrivalString)")
             }
         } catch {
-            AppLogger.shared.error("[ThreadService]:\(#line)] \(#function) Error fetching thread: \(error)")
+            print("[ThreadService]:\(#line)] \(#function) Error fetching thread: \(error)")
         }
     }
 }

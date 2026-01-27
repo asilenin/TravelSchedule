@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 
 typealias NearestSettlement = Components.Schemas.NearestCityResponse
 
@@ -34,15 +33,15 @@ func testFetchGeography() {
     Task {
         do {
             let service = try ServiceFactory.makeNearestSettlementService()
-            AppLogger.shared.notice("[NearestSettlementService]:\(#line)] \(#function) Fetching stations...")
+            print("[NearestSettlementService]:\(#line)] \(#function) Fetching stations...")
             let stations = try await service.getNearestSettlement(
                 lat: TestConstants.NearestSettlementServiceLat,
                 lng: TestConstants.NearestSettlementServiceLong,
                 distance: TestConstants.NearestSettlementServiceDistance
             )
-            AppLogger.shared.info("[NearestSettlementService]:\(#line)] \(#function) Successfully fetched stations: \(stations)")
+            print("[NearestSettlementService]:\(#line)] \(#function) Successfully fetched stations: \(stations)")
         } catch {
-            AppLogger.shared.error("[NearestSettlementService]:\(#line)] \(#function) Error fetching stations: \(error)")
+            print("[NearestSettlementService]:\(#line)] \(#function) Error fetching stations: \(error)")
         }
     }
 }

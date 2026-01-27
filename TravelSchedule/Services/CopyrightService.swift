@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 
 typealias Copyright = Components.Schemas.CopyrightWrapper
 
@@ -31,11 +30,11 @@ func testFetchCopyright(){
     Task {
         do {
             let service = try ServiceFactory.makeCopyrightService()
-            AppLogger.shared.notice("[CopyrightService]:\(#line)] \(#function) Fetching copyright...")
+            print("[CopyrightService]:\(#line)] \(#function) Fetching copyright...")
             let copyright = try await service.getCopyright()
-            AppLogger.shared.info("[CopyrightService]:\(#line)] \(#function) Successfully fetched copyright: \(copyright)")
+            print("[CopyrightService]:\(#line)] \(#function) Successfully fetched copyright: \(copyright)")
         } catch {
-            AppLogger.shared.error("[CopyrightService]:\(#line)] \(#function) Error fetching copyright: \(error)")
+            print("[CopyrightService]:\(#line)] \(#function) Error fetching copyright: \(error)")
         }
     }
 }

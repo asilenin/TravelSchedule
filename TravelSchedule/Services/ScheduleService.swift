@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 
 typealias ScheduleResponse = Components.Schemas.ScheduleResponse
 
@@ -33,7 +32,7 @@ func testFetchSchedule() {
     Task {
         do {
             let service = try ServiceFactory.makeScheduleService()
-            AppLogger.shared.notice("[ScheduleService]:\(#line)] \(#function) Fetching Schedule...")
+            print("[ScheduleService]:\(#line)] \(#function) Fetching Schedule...")
             let schedule = try await service.getStationSchedule(
                 station: TestConstants.ScheduleServiceStation,
                 date: TestConstants.ScheduleServiceDate
@@ -44,12 +43,12 @@ func testFetchSchedule() {
             if let jsonData = try? encoder.encode(schedule),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                AppLogger.shared.info("[ScheduleService]:\(#line)] \(#function) Successfully fetched schedule:\n\(jsonString!)")
+                print("[ScheduleService]:\(#line)] \(#function) Successfully fetched schedule:\n\(jsonString!)")
             } else {
-                AppLogger.shared.info("[ScheduleService]:\(#line)] \(#function) Successfully fetched schedule (debug description): \(schedule)")
+                print("[ScheduleService]:\(#line)] \(#function) Successfully fetched schedule (debug description): \(schedule)")
             }
         } catch {
-            AppLogger.shared.error("[ScheduleService]:\(#line)] \(#function) Error fetching schedule: \(error)")
+            print("[ScheduleService]:\(#line)] \(#function) Error fetching schedule: \(error)")
         }
     }
 }

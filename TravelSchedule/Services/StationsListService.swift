@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 import OpenAPIRuntime
 
 typealias StationsList = Components.Schemas.AllStationsResponse
@@ -36,12 +35,12 @@ func testFetchStationsList(){
     Task {
         do {
             let service = try ServiceFactory.makeStationsListService()
-            AppLogger.shared.notice("[StationsListService]:\(#line)] \(#function) Fetching allStations...")
+            print("[StationsListService]:\(#line)] \(#function) Fetching allStations...")
             let allStations = try await service.getAllStations(
             )
-            AppLogger.shared.info("[StationsListService]:\(#line)] \(#function) Successfully fetched allStations \(allStations)")
+            print("[StationsListService]:\(#line)] \(#function) Successfully fetched allStations \(allStations)")
         } catch {
-            AppLogger.shared.error("[StationsListService]:\(#line)] \(#function) Error fetching allStations: \(error)")
+            print("[StationsListService]:\(#line)] \(#function) Error fetching allStations: \(error)")
         }
     }
 }

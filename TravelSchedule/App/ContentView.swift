@@ -10,7 +10,9 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            testServices()
+            Task {
+                testServices()
+            }
         }
     }
 }

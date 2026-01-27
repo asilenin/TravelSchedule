@@ -1,5 +1,4 @@
 import Foundation
-import Logging
 
 typealias Carrier = Components.Schemas.CarrierResponse
 
@@ -29,10 +28,10 @@ final class CarrierService: CarrierServiceProtocol {
 }
 
 func testFetchCarrier() {
-    Task {
+    Task{
         do {
             let service = try ServiceFactory.makeCarrierService()
-            AppLogger.shared.notice("[CarrierService]:\(#line)] \(#function) Fetching info...")
+            print("[CarrierService]:\(#line)] \(#function) Fetching info...")
             let info = try await service.getCarrierInfo(
                 code: TestConstants.CarrierServiceCode
             )
@@ -42,12 +41,12 @@ func testFetchCarrier() {
             if let jsonData = try? encoder.encode(info),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
-                AppLogger.shared.info("[CarrierService]:\(#line)] \(#function) Successfully fetched info:\n\(jsonString!)")
+                print("[CarrierService]:\(#line)] \(#function) Successfully fetched info:\n\(jsonString!)")
             } else {
-                AppLogger.shared.info("[CarrierService]:\(#line)] \(#function) Successfully fetched info (debug description): \(info)")
+                print("[CarrierService]:\(#line)] \(#function) Successfully fetched info (debug description): \(info)")
             }
         } catch {
-            AppLogger.shared.error("[CarrierService]:\(#line)] \(#function) Error fetching info: \(error)")
+            print("[CarrierService]:\(#line)] \(#function) Error fetching info: \(error)")
         }
     }
 }
