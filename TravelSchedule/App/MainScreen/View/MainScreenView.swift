@@ -9,7 +9,7 @@ struct MainScreenView: View {
     @State private var departureCity: City?
     @State private var arrivalCity: City?
     private var isFindButtonEnabled: Bool {
-        true
+        departureCity != nil && arrivalCity != nil
     }
     
     private let stories: [Story] = [
@@ -29,6 +29,12 @@ struct MainScreenView: View {
                         findButtonSection
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $citySelectionForDeparture) {
+                CityListView(selectedCity: $departureCity)
+            }
+            .fullScreenCover(isPresented: $citySelectionForArrival) {
+                CityListView(selectedCity: $arrivalCity)
             }
         }
     }
