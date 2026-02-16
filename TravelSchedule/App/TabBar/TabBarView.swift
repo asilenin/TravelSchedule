@@ -6,13 +6,13 @@ struct TabBarView: View {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
        
-        appearance.backgroundColor = .systemBackground
+        appearance.backgroundColor = .whiteTS
         appearance.shadowColor = UIColor { trait in
             trait.userInterfaceStyle == .dark ? .black : .grayUniversalTS
         }
 
         appearance.stackedLayoutAppearance.normal.iconColor = .grayUniversalTS
-        appearance.stackedLayoutAppearance.selected.iconColor = .black
+        appearance.stackedLayoutAppearance.selected.iconColor = .blackTS
 
         
         UITabBar.appearance().standardAppearance = appearance

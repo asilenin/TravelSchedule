@@ -8,16 +8,12 @@ struct MainScreenView: View {
     @State private var citySelectionForArrival = false
     @State private var departureCity: City?
     @State private var arrivalCity: City?
+    @State private var navigateToCarrierSelect = false
     private var isFindButtonEnabled: Bool {
         departureCity != nil && arrivalCity != nil
     }
     
-    private let stories: [Story] = [
-        Story(imageName: "story1", title: "Text Text Text...", isSeen: false),
-        Story(imageName: "story2", title: "Text Text Text...", isSeen: false),
-        Story(imageName: "story3", title: "Text Text Text...", isSeen: true),
-        Story(imageName: "story4", title: "Text Text Text...", isSeen: true)
-    ]
+    private let stories = MockStories.stories
     
     var body: some View {
         ZStack {
@@ -36,7 +32,11 @@ struct MainScreenView: View {
             .fullScreenCover(isPresented: $citySelectionForArrival) {
                 CityListView(selectedCity: $arrivalCity)
             }
+            .navigationDestination(isPresented: $navigateToCarrierSelect) {
+                CarrierSelectView()
+            }
         }
+        .background(.whiteTS)
     }
     
     private var storiesSection: some View {
@@ -98,6 +98,7 @@ struct MainScreenView: View {
         Group {
             if isFindButtonEnabled {
                 Button(action: {
+                    navigateToCarrierSelect = true
                 }) {
                     Text("Найти")
                         .font(.system(size: 17, weight: .bold))
@@ -124,8 +125,6 @@ struct MainScreenView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
-    // MARK: - Helpers
     
     private func displayText(for city: City?, defaultText: String) -> String {
         guard let city else { return defaultText }

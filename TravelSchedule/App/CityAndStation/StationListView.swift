@@ -29,26 +29,20 @@ struct StationListView: View {
             ZStack {
                 List {
                     ForEach(filteredStations) { station in
-                        HStack {
-                            Text(station.name)
-                                .font(.system(size: 17, weight: .regular))
-                                .foregroundColor(.blackTS)
-                            Spacer()
-                            
-                            Image("ChevronForward")
-                                .renderingMode(.template)
-                                .foregroundColor(.blackTS)
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            var resultCity = city
-                            resultCity.selectedStation = station
-                            selectedCityBinding = resultCity
-                            onDismiss()
-                        }
-                        .listRowSeparator(.hidden)
+                        StationRowView(station: station)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                var resultCity = city
+                                resultCity.selectedStation = station
+                                selectedCityBinding = resultCity
+                                onDismiss()
+                            }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.whiteTS)
                     }
                 }
+                .scrollContentBackground(.hidden)
+                .background(.whiteTS)
                 .listStyle(.plain)
                 
                 if filteredStations.isEmpty && !searchText.isEmpty {
@@ -60,6 +54,7 @@ struct StationListView: View {
                 }
             }
         }
+        .background(.whiteTS)
         .navigationBarHidden(true)
     }
 }
