@@ -5,7 +5,7 @@ struct NoInternetView: View {
     var body: some View {
         
         VStack{
-            Image("NoInternet")
+            Image(.noInternet)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 223, height: 223)

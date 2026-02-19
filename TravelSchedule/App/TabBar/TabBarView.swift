@@ -25,7 +25,7 @@ struct TabBarView: View {
                 MainScreenView()
             }
             .tabItem {
-                Image("Travel").renderingMode(.template)
+                Image(.travel).renderingMode(.template)
             }
             .tag(0)
             
@@ -33,7 +33,7 @@ struct TabBarView: View {
                 SettingsView()
             }
             .tabItem {
-                Image("Settings").renderingMode(.template)
+                Image(.settings).renderingMode(.template)
             }
             .tag(1)
         }

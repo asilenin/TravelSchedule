@@ -10,7 +10,7 @@ struct CityRowView: View {
                 .foregroundColor(.blackTS)
             Spacer()
             
-            Image("ChevronForward")
+            Image(.chevronForward)
                 .renderingMode(.template)
                 .foregroundColor(.blackTS)
         }

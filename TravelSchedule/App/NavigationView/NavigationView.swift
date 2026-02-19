@@ -14,7 +14,7 @@ struct NavigationView: View {
                 Button {
                     backAction?() ?? dismiss()
                 } label: {
-                    Image("ChevronBack")
+                    Image(.chevronBack)
                         .resizable()
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)

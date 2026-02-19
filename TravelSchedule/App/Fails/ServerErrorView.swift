@@ -5,7 +5,7 @@ struct ServerErrorView: View {
     var body: some View {
         
         VStack{
-            Image("ServerError")
+            Image(.serverError)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 223, height: 223)

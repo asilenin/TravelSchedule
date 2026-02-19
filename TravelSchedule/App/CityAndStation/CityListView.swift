@@ -11,9 +11,9 @@ struct CityListView: View {
     
     private var filteredCities: [City] {
         if searchText.isEmpty {
-            return cities
+            cities
         } else {
-            return cities.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            cities.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
     

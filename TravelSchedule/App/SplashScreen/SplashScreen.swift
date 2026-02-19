@@ -8,7 +8,7 @@ struct SplashScreen: View {
             TabBarView()
         } else {
             ZStack {
-                Image("SplashScreen")
+                Image(.splashScreen)
                     .resizable()
                     .ignoresSafeArea()
             }

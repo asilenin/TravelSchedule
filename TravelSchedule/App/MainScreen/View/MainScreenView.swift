@@ -84,7 +84,7 @@ struct MainScreenView: View {
         Button {
             (departureCity, arrivalCity) = (arrivalCity, departureCity)
         } label: {
-            Image("Сhange")
+            Image(.switchStations)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 36, height: 36)
