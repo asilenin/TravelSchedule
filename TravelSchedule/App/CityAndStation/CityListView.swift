@@ -46,7 +46,6 @@ struct CityListView: View {
                     .background(.whiteTS)
                     .listStyle(.plain)
                 
-                    
                     if filteredCities.isEmpty && !searchText.isEmpty {
                         Text("Город не найден")
                             .font(.system(size: 24, weight: .bold))
