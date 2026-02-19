@@ -95,22 +95,24 @@ struct MainScreenView: View {
     }
     
     private var findButtonSection: some View {
-        Group {
-            if isFindButtonEnabled {
-                Button(action: {
-                    navigateToCarrierSelect = true
-                }) {
-                    Text("Найти")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundColor(.whiteUniversalTS)
-                        .frame(width: 150, height: 60)
-                        .background(.blueUniversalTS)
-                        .cornerRadius(16)
-                }
-                .buttonStyle(PlainButtonStyle())
-                .padding(.top, 16)
-            }
+        guard isFindButtonEnabled else {
+            return AnyView(EmptyView())
         }
+        
+        return AnyView(
+            Button(action: {
+                navigateToCarrierSelect = true
+            }) {
+                Text("Найти")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundColor(.whiteUniversalTS)
+                    .frame(width: 150, height: 60)
+                    .background(.blueUniversalTS)
+                    .cornerRadius(16)
+            }
+                .buttonStyle(.plain)
+                .padding(.top, 16)
+        )
     }
     
     private func cityButton(title: String, action: @escaping () -> Void) -> some View {
