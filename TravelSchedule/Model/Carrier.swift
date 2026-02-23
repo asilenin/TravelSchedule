@@ -10,3 +10,9 @@ struct Сarrier: Identifiable {
     let duration: String
     let date: String
 }
+struct CarrierInfo {
+    let carrierLogoName: String
+    let carrierFullName: String
+    let email: String
+    let phone: String
+}
