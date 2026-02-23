@@ -11,18 +11,13 @@ struct NavigationView: View {
     var body: some View {
         HStack {
             if showBackButton {
-                Button {
-                    backAction?() ?? dismiss()
-                } label: {
-                    Image(.chevronBack)
-                        .resizable()
-                        .renderingMode(.template)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 17, height: 22)
-                        .foregroundColor(.blackTS)
-                        .padding(.leading, 8)
-                }
-                .frame(width: backButtonWidth, alignment: .leading)
+                ChevronBackButton {
+                    if let backAction {
+                        backAction()
+                    } else {
+                        dismiss()
+                    }
+                }.frame(width: backButtonWidth, alignment: .leading)
             } else {
                 Spacer().frame(width: backButtonWidth)
             }
@@ -44,7 +39,6 @@ struct NavigationView: View {
         title: "",
         showBackButton: true,
         backAction: {
-            
         }
     )
     .padding()

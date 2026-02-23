@@ -1,8 +1,9 @@
 import Foundation
 
-struct Story: Identifiable {
+struct StoryModel: Identifiable {
     let id = UUID()
     let imageName: String
     let title: String
-    let isSeen: Bool
+    let text: String
+    var isSeen: Bool
 }

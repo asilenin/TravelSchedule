@@ -9,11 +9,19 @@ struct MainScreenView: View {
     @State private var departureCity: City?
     @State private var arrivalCity: City?
     @State private var navigateToCarrierSelect = false
+    @State private var showFullScreenStory = false
+    @State private var currentStoryIndex = 0
     private var isFindButtonEnabled: Bool {
         departureCity != nil && arrivalCity != nil
     }
     
-    private let stories = MockStories.stories
+    @State private var stories = MockStories.stories
+    @State private var storyHelper: StoryHelper
+
+    init() {
+        let stories = MockStories.stories
+        _storyHelper = State(initialValue: StoryHelper(storiesCount: stories.count))
+    }
     
     var body: some View {
         ZStack {
@@ -35,6 +43,19 @@ struct MainScreenView: View {
             .navigationDestination(isPresented: $navigateToCarrierSelect) {
                 CarrierSelectView()
             }
+            .fullScreenCover(isPresented: $showFullScreenStory) {
+                StoriesView(
+                    stories: stories,
+                    currentStoryIndex: $currentStoryIndex,
+                    showFullScreenStory: $showFullScreenStory,
+                    onStoryMarkedSeen: { index in
+                        if index >= 0 && index < self.stories.count {
+                            self.stories[index].isSeen = true
+                        }
+                    },
+                    storyHelper: self.storyHelper
+                )
+            }
         }
         .background(.whiteTS)
     }
@@ -43,8 +64,15 @@ struct MainScreenView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(stories) { story in
-                    StoryView(story: story)
-                        .padding(.vertical, 2)
+                    StoryPreview(
+                        story: story,
+                        onStoryTap: { tappedIndex in
+                            self.currentStoryIndex = tappedIndex
+                            self.showFullScreenStory = true
+                        },
+                        currentIndex: currentStoryIndex
+                    )
+                    .padding(.vertical, 2)
                 }
             }
             .padding(.horizontal, 16)
