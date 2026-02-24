@@ -54,7 +54,6 @@ struct TimeFilterView: View {
                 .padding(.bottom, 95)
             }
             
-            // MARK: - Apply Button
             if showApplyButton {
                 ApplyTimeFilterButton{
                     applyFilters()
@@ -67,8 +66,6 @@ struct TimeFilterView: View {
         .navigationBarHidden(true)
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
-    
-    // MARK: - Private Methods
     
     private func updateApplyButtonVisibility() {
         showApplyButton = !selectedDepartureTime.isEmpty || selectedTransfer != nil

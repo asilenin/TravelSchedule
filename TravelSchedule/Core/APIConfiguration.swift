@@ -13,12 +13,9 @@ enum AppConfigurationError: Error, LocalizedError {
 
 enum APIConfiguration {
 
-    /// Loads Yandex Rasp API key from Info.plist
     static func yandexRaspAPIKey() throws -> String {
         try loadAPIKey(named: "YandexStationsAPIKey")
     }
-
-    // MARK: - Private helpers
 
     private static func loadAPIKey(named key: String) throws -> String {
         guard

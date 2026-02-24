@@ -8,14 +8,14 @@ struct StoriesView: View {
     let onStoryMarkedSeen: (Int) -> Void
     
     @Binding var currentStoryIndex: Int
-    @State private var progress: CGFloat = 0.0
+    @State private var progress: CGFloat
     @State private var timer: Timer.TimerPublisher
     @State private var cancellable: Cancellable?
     
     private let storyHelper: StoryHelper
     private var currentStory: StoryModel { stories[currentStoryIndex] }
     
-    init(
+    public init(
         stories: [StoryModel],
         currentStoryIndex: Binding<Int>,
         showFullScreenStory: Binding<Bool>,
@@ -24,6 +24,9 @@ struct StoriesView: View {
     ) {
         self.stories = stories
         self._currentStoryIndex = currentStoryIndex
+        let sections = max(stories.count, 1)
+        let initialProgress = CGFloat(currentStoryIndex.wrappedValue) / CGFloat(sections)
+        self._progress = State(initialValue: initialProgress)
         self._showFullScreenStory = showFullScreenStory
         self.onStoryMarkedSeen = onStoryMarkedSeen
         self.storyHelper = storyHelper
@@ -53,11 +56,9 @@ struct StoriesView: View {
             .onTapGesture { value in
                 let screenWidth = UIScreen.main.bounds.width
                 if value.x > screenWidth / 2 {
-                    print("Tap next story")
                     nextStory()
                     resetTimer()
                 } else {
-                    print("Tap previous story")
                     previousStory()
                     resetTimer()
                 }
@@ -74,29 +75,34 @@ struct StoriesView: View {
         if nextProgress >= 1 {
             nextProgress = 0
         }
-        //withAnimation {
             progress = nextProgress
-        //}
     }
 
     private func nextStory() {
+        onStoryMarkedSeen(currentStoryIndex)
         let storiesCount = stories.count
-        let currentStoryIndex = Int(progress * CGFloat(storiesCount))
-        let nextStoryIndex = currentStoryIndex + 1 < storiesCount ? currentStoryIndex + 1 : 0
-        withAnimation {
-            progress = CGFloat(nextStoryIndex) / CGFloat(storiesCount)
+        let nextStoryIndex = currentStoryIndex + 1
+        if nextStoryIndex < storiesCount {
+            currentStoryIndex = nextStoryIndex
+            withAnimation {
+                progress = CGFloat(nextStoryIndex) / CGFloat(storiesCount)
+            }
+        }else{
+            dismiss()
         }
     }
     
     private func previousStory() {
         let storiesCount = stories.count
-        let currentStoryIndex = Int(progress * CGFloat(storiesCount))
-        
-        
-        let previousStoryIndex = currentStoryIndex - 1 < 1 ? 1 : currentStoryIndex - 1
+        let nextStoryIndex = currentStoryIndex - 1
+        if nextStoryIndex < 0 {
+            currentStoryIndex = 0
+        } else {
+            currentStoryIndex = nextStoryIndex
+        }
         
         withAnimation {
-            progress = CGFloat(previousStoryIndex) / CGFloat(storiesCount)
+            progress = CGFloat(nextStoryIndex) / CGFloat(storiesCount)
         }
     }
 

@@ -1,18 +1,9 @@
 import SwiftUI
-
-// MARK: - CarrierView
-
 struct CarrierView: View {
-    
-    // MARK: - Properties
     
     let carrier: CarrierInfo
     
-    // MARK: - Environment
-    
     @Environment(\.dismiss) var dismiss
-    
-    // MARK: - Body
     
     var body: some View {
         VStack(spacing: 0) {
@@ -32,8 +23,6 @@ struct CarrierView: View {
         .background(Color(.whiteTS).ignoresSafeArea())
         .navigationBarHidden(true)
     }
-
-    // MARK: - Views
     
     private var navigationHeader: some View {
         NavigationView(title: "Информация о перевозчике", showBackButton: true, backAction: {
@@ -99,8 +88,6 @@ struct CarrierView: View {
         .frame(maxWidth: .infinity, alignment: .center)
     }
 }
-
-// MARK: - CarrierView_Preview
 
 #Preview {
     if let carrier = CarrierInfo.carrier.first {

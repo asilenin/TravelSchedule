@@ -39,8 +39,6 @@ struct CarrierLogoView: View {
     }
 }
 
-// MARK: - CarrierLogoView_Preview
-
 #Preview {
     List
     {

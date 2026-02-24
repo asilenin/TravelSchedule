@@ -1,7 +1,5 @@
 import SwiftUI
 
-// MARK: - AgreementView
-
 struct AgreementView: View {
     @Environment(\.dismiss) private var dismiss
     
@@ -52,8 +50,6 @@ struct AgreementView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-
-    // MARK: - Content
     
     private var text1: String {
         """

@@ -1,7 +1,5 @@
 import SwiftUI
 
-// MARK: - MainView
-
 struct MainScreenView: View {
     
     @State private var citySelectionForDeparture = false
