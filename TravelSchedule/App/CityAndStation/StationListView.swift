@@ -5,6 +5,7 @@ struct StationListView: View {
     let onDismiss: () -> Void
     @Binding var path: NavigationPath
     @Binding var selectedCityBinding: City?
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
     
     @State private var searchText: String = ""
     @Environment(\.dismiss) var dismiss
@@ -38,11 +39,11 @@ struct StationListView: View {
                                 onDismiss()
                             }
                             .listRowSeparator(.hidden)
-                            .listRowBackground(Color.whiteTS)
+                            .listRowBackground(isDarkModeEnabled ? Color.blackUniversalTS : Color.whiteUniversalTS)
                     }
                 }
                 .scrollContentBackground(.hidden)
-                .background(.whiteTS)
+                .background(isDarkModeEnabled ? .blackUniversalTS : .whiteUniversalTS)
                 .listStyle(.plain)
                 
                 if filteredStations.isEmpty && !searchText.isEmpty {
@@ -50,11 +51,11 @@ struct StationListView: View {
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.blackTS)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(.whiteTS)
+                        .background(isDarkModeEnabled ? .blackUniversalTS : .whiteUniversalTS)
                 }
             }
         }
-        .background(.whiteTS)
+        .background(isDarkModeEnabled ? .blackUniversalTS : .whiteUniversalTS)
         .navigationBarHidden(true)
     }
 }

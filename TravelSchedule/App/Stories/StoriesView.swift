@@ -4,6 +4,7 @@ import Combine
 struct StoriesView: View {
     let stories: [StoryModel]
     @Binding var showFullScreenStory: Bool
+    @Environment(\.dismiss) var dismiss
     let onStoryMarkedSeen: (Int) -> Void
     
     @Binding var currentStoryIndex: Int
@@ -35,7 +36,7 @@ struct StoriesView: View {
                 StoryView(story: currentStory)
                 ProgressBar(numberOfSections: stories.count, progress: progress)
                     .padding(.init(top: 28, leading: 12, bottom: 12, trailing: 12))
-                CloseButton(action: {})
+                CloseButton(action: {dismiss()})
                     .padding(.top, 57)
                     .padding(.trailing, 12)
             }

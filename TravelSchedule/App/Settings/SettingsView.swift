@@ -27,7 +27,8 @@ struct SettingsView: View {
                                     .kerning(-0.41)
                                 Spacer()
                                 Image(.chevronForward)
-                                    .foregroundColor(.blackTS)
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.blackTS)
                             }
                             .contentShape(Rectangle())
                             .padding(.vertical, 19)

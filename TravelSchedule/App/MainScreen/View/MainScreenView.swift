@@ -63,14 +63,14 @@ struct MainScreenView: View {
     private var storiesSection: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(stories) { story in
+                ForEach(stories.indices, id: \.self) { index in
                     StoryPreview(
-                        story: story,
+                        story: stories[index],
                         onStoryTap: { tappedIndex in
                             self.currentStoryIndex = tappedIndex
                             self.showFullScreenStory = true
                         },
-                        currentIndex: currentStoryIndex
+                        currentIndex: index
                     )
                     .padding(.vertical, 2)
                 }

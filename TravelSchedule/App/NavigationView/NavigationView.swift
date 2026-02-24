@@ -5,7 +5,7 @@ struct NavigationView: View {
     var showBackButton: Bool
     var backButtonWidth: CGFloat = 42
     var backAction: (() -> Void)?
-    
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -17,19 +17,20 @@ struct NavigationView: View {
                     } else {
                         dismiss()
                     }
-                }.frame(width: backButtonWidth, alignment: .leading)
+                }
+                .frame(width: backButtonWidth, alignment: .leading)
             } else {
                 Spacer().frame(width: backButtonWidth)
             }
             Spacer()
             Text(title)
                 .font(.system(size: 17, weight: .bold))
-                .foregroundColor(.blackTS)
+                .foregroundColor(isDarkModeEnabled ? Color.whiteUniversalTS : Color.blackUniversalTS)
             Spacer()
             Spacer().frame(width: backButtonWidth)
         }
         .padding(.vertical, 10)
-        .background(.whiteTS)
+        .background(isDarkModeEnabled ? Color.blackUniversalTS : Color.whiteUniversalTS)
         .padding(.vertical, 11)
     }
 }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ChevronForwardButton: View {
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
     let action: () -> Void
     
     var body: some View {
@@ -12,9 +13,8 @@ struct ChevronForwardButton: View {
                 .renderingMode(.template)
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 17, height: 22)
-                .foregroundColor(.blackTS)
+                .foregroundColor(isDarkModeEnabled ? .whiteUniversalTS : .blackUniversalTS)
                 .padding(.leading, 8)
         }
     }
 }
-
