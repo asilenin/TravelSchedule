@@ -19,8 +19,6 @@ struct CarrierSelectView: View {
         .toolbar(.hidden, for: .tabBar)
     }
     
-    // MARK: - Views
-    
     private var mainContent: some View {
         VStack(spacing: 0) {
             navigationHeader
@@ -92,8 +90,6 @@ struct CarrierSelectView: View {
         }
     }
 }
-
-// MARK: - ScheduleView_Preview
 
 #Preview{
     CarrierSelectView()

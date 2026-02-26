@@ -5,22 +5,18 @@ struct NavigationView: View {
     var showBackButton: Bool
     var backButtonWidth: CGFloat = 42
     var backAction: (() -> Void)?
-    
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         HStack {
             if showBackButton {
-                Button {
-                    backAction?() ?? dismiss()
-                } label: {
-                    Image(.chevronBack)
-                        .resizable()
-                        .renderingMode(.template)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 17, height: 22)
-                        .foregroundColor(.blackTS)
-                        .padding(.leading, 8)
+                ChevronBackButton {
+                    if let backAction {
+                        backAction()
+                    } else {
+                        dismiss()
+                    }
                 }
                 .frame(width: backButtonWidth, alignment: .leading)
             } else {
@@ -29,12 +25,12 @@ struct NavigationView: View {
             Spacer()
             Text(title)
                 .font(.system(size: 17, weight: .bold))
-                .foregroundColor(.blackTS)
+                .foregroundColor(isDarkModeEnabled ? Color.whiteUniversalTS : Color.blackUniversalTS)
             Spacer()
             Spacer().frame(width: backButtonWidth)
         }
         .padding(.vertical, 10)
-        .background(.whiteTS)
+        .background(isDarkModeEnabled ? Color.blackUniversalTS : Color.whiteUniversalTS)
         .padding(.vertical, 11)
     }
 }
@@ -44,7 +40,6 @@ struct NavigationView: View {
         title: "",
         showBackButton: true,
         backAction: {
-            
         }
     )
     .padding()

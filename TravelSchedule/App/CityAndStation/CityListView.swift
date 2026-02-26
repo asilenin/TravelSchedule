@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CityListView: View {
     
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
     private let cities: [City] = CityAndStationsMockData.cities
     
     @State private var path = NavigationPath()
@@ -39,25 +40,24 @@ struct CityListView: View {
                                     path.append(city)
                                 }
                                 .listRowSeparator(.hidden)
-                                .listRowBackground(Color.whiteTS)
+                                .listRowBackground(isDarkModeEnabled ? Color.blackUniversalTS : Color.whiteUniversalTS)
                         }
                     }
                     .scrollContentBackground(.hidden)
-                    .background(.whiteTS)
+                    .background(isDarkModeEnabled ? Color.blackUniversalTS : Color.whiteUniversalTS)
                     .listStyle(.plain)
                 
-                    
                     if filteredCities.isEmpty && !searchText.isEmpty {
                         Text("Город не найден")
                             .font(.system(size: 24, weight: .bold))
-                            .foregroundColor(.blackTS)
+                            .foregroundColor(isDarkModeEnabled ? Color.whiteUniversalTS : Color.blackUniversalTS)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(.whiteTS)
+                            .background(isDarkModeEnabled ? Color.blackUniversalTS : Color.whiteUniversalTS)
                     }
                 }
                 
             }
-            .background(.whiteTS)
+            .background(isDarkModeEnabled ? Color.blackUniversalTS : Color.whiteUniversalTS)
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: City.self) { city in
                 StationListView(city: city, onDismiss: {dismiss()}, path: $path, selectedCityBinding: $selectedCity)

@@ -1,21 +1,22 @@
 import SwiftUI
 
 struct StationRowView: View {
-    let station: Station
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
     
+    let station: Station
     var body: some View {
         HStack {
             Text(station.name)
                 .font(.system(size: 17, weight: .regular))
-                .foregroundColor(.blackTS)
+                .foregroundColor(isDarkModeEnabled ? .whiteUniversalTS : .blackUniversalTS)
             Spacer()
             
             Image(.chevronForward)
                 .renderingMode(.template)
-                .foregroundColor(.blackTS)
+                .foregroundColor(isDarkModeEnabled ? .whiteUniversalTS : .blackUniversalTS)
         }
         .padding(.vertical, 12)
-        .background(.whiteTS)
+        .background(isDarkModeEnabled ? .blackUniversalTS : .whiteUniversalTS)
     }
 }
 
@@ -26,4 +27,3 @@ struct StationRowView: View {
     }
     .background(.grayUniversalTS)
 }
-
