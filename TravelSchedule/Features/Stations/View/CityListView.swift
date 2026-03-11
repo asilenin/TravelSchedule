@@ -2,7 +2,6 @@ import SwiftUI
 
 struct CityListView: View {
     @StateObject private var viewModel: CitiesListViewModel
-    
     @State private var path = NavigationPath()
     @State private var searchText: String = ""
     @Binding var selectedCity: CityModel?

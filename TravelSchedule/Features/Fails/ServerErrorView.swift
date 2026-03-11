@@ -3,7 +3,6 @@ import SwiftUI
 struct ServerErrorView: View {
     
     var body: some View {
-        
         VStack{
             Image(.serverError)
                 .resizable()

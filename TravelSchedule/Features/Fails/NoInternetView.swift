@@ -3,7 +3,6 @@ import SwiftUI
 struct NoInternetView: View {
     
     var body: some View {
-        
         VStack{
             Image(.noInternet)
                 .resizable()

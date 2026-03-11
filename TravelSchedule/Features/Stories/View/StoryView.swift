@@ -45,6 +45,5 @@ struct StoryView: View {
 
 #Preview {
     let stories = MockStories.stories
-    
     StoryView(story: stories[0])
 }

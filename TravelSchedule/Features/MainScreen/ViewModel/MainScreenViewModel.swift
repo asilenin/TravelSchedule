@@ -6,7 +6,6 @@ import Combine
 final class MainScreenViewModel: ObservableObject {
     
     // MARK: - State
-    
     enum State: Equatable {
         case idle
         case loading
@@ -21,17 +20,14 @@ final class MainScreenViewModel: ObservableObject {
     }
     
     // MARK: - Published
-    
     @Published private(set) var state: State = .idle
     @Published var departureCity: City?
     @Published var arrivalCity: City?
     
     // MARK: - Dependencies
-    
     private let searchService: SearchServiceProtocol
     
     // MARK: - Init
-    
     init(searchService: SearchServiceProtocol) {
         self.searchService = searchService
     }
@@ -61,13 +57,8 @@ final class MainScreenViewModel: ObservableObject {
         arrivalCity = temp
     }
     
-    
     // MARK: - Public API
-    
     func search(date: String? = nil) async {
-        
-        
-        
         guard
             let fromStationId = self.departureCity?.selectedStation?.yandexCode,
             let toStationId = self.arrivalCity?.selectedStation?.yandexCode
@@ -83,9 +74,7 @@ final class MainScreenViewModel: ObservableObject {
                 to: toStationId,
                 date: date
             )
-            
             state = .loaded(result)
-            
         } catch {
             state = .failed(mapError(error))
         }
@@ -96,7 +85,6 @@ final class MainScreenViewModel: ObservableObject {
     }
     
     // MARK: - Error mapping
-    
     private func mapError(_ error: Error) -> AppError {
         let nsError = error as NSError
         

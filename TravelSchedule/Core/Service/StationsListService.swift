@@ -24,7 +24,6 @@ protocol StationsListServiceProtocol: Sendable {
 struct StationsListService: StationsListServiceProtocol {
     
     private static let cache = StationsCache()
-    
     private let network: NetworkClient
     
     init(network: NetworkClient) {
@@ -38,8 +37,6 @@ struct StationsListService: StationsListServiceProtocol {
         }
         
         let dto = try await network.getAllStations()
-        
-        // Filter only Russia (check exact title from API response)
         let countries = (dto.countries ?? []).filter {
             ($0.title ?? "")
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -51,7 +48,6 @@ struct StationsListService: StationsListServiceProtocol {
         
         var idOccurrences: [String: Int] = [:]
         
-        
         for country in countries {
             let regions = country.regions ?? []
             for region in regions {
@@ -60,25 +56,19 @@ struct StationsListService: StationsListServiceProtocol {
                     let stations = settlement.stations ?? []
                     for s in stations {
                         
-                        // Skip invalid/empty names (UI relies on these)
                         let stationTitle = (s.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                         let settlementTitle = (settlement.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                         guard !stationTitle.isEmpty, !settlementTitle.isEmpty else { continue }
                         
-                        // Normalize + filter by station_type / transport_type
                         let stationTypeRaw = (s.station_type ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                         let transportTypeRaw = (s.transport_type ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                         
-                        // Filter only rail-related stations for the app scope.
-                        // If later you want to support bus/plane/etc, expand this list.
                         let allowedStationTypes: Set<String> = ["train_station", "station", "platform"]
                         guard allowedStationTypes.contains(stationTypeRaw) else { continue }
                         
-                        // Include both train and suburban (электричка) as "rail" transport types.
                         let allowedTransportTypes: Set<String> = ["train", "suburban"]
                         guard allowedTransportTypes.contains(transportTypeRaw) else { continue }
                         
-                        // Convert empty strings to nil for the model layer
                         let stationType: String? = stationTypeRaw.isEmpty ? nil : stationTypeRaw
                         let transportType: String? = transportTypeRaw.isEmpty ? nil : transportTypeRaw
                         
@@ -94,17 +84,12 @@ struct StationsListService: StationsListServiceProtocol {
                             s.lat.map { String($0) },
                             s.lng.map { String($0) }
                         ]
-
-                        let stableId = rawParts
-                            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-                            .filter { !$0.isEmpty }
-                            .joined(separator: "|")
                         
                         let yandexCode = (s.codes?.yandex_code ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                         guard !yandexCode.isEmpty else { continue }
                         
                         let baseId = "yandex|\(yandexCode)"
-
+                        
                         let occurrence = idOccurrences[baseId, default: 0]
                         idOccurrences[baseId] = occurrence + 1
                         let finalId = occurrence == 0 ? baseId : "\(baseId)#\(occurrence + 1)"
@@ -135,7 +120,7 @@ struct StationsListService: StationsListServiceProtocol {
     func getCities() async throws -> [CityModel] {
         let stations = try await getStations()
         let grouped = Dictionary(grouping: stations) { $0.settlement ?? "Неизвестно" }
-
+        
         return grouped
             .map { settlement, stations in
                 CityModel(
@@ -171,15 +156,15 @@ struct StationsListService: StationsListServiceProtocol {
 func testFetchStationsList(network: NetworkClient) async {
     do {
         let service = StationsListService(network: network)
-        print("[StationsListService] Fetching stations...")
+        print("[StationsListService]:\(#line)] \(#function) Fetching stations...")
         
         let stations = try await service.getStations()
         
-        print("[StationsListService] Stations count: \(stations.count)")
+        print("[StationsListService]:\(#line)] \(#function) Stations count: \(stations.count)")
         if let first = stations.first {
-            print("[StationsListService] First station id/title: \(first.id) / \(first.title)")
+            print("[StationsListService]:\(#line)] \(#function) First station id/title: \(first.id) / \(first.title)")
         }
     } catch {
-        print("[StationsListService] Error fetching stations: \(error)")
+        print("[StationsListService]:\(#line)] \(#function) Error fetching stations: \(error)")
     }
 }

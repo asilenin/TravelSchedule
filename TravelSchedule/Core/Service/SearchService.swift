@@ -33,22 +33,19 @@ final class SearchService: SearchServiceProtocol {
 func testFetchSearch(container: AppContainer) async {
     do {
         let service = container.makeSearchService()
-        print("[SearchService] Fetching Schedule Between Stations...")
+        print("[SearchService]:\(#line)] \(#function) Fetching Schedule Between Stations...")
         
         let rawFrom = TestConstants.SearchServiceFrom
         let rawTo = TestConstants.SearchServiceTo
         
-        print("[SearchService] RAW FROM:", rawFrom)
-        print("[SearchService] RAW TO:", rawTo)
+        print("[SearchService]:\(#line)] \(#function) RAW FROM:", rawFrom)
+        print("[SearchService]:\(#line)] \(#function) RAW TO:", rawTo)
         
-        // Remove possible internal prefixes like "yandex|"
         let cleanFrom = rawFrom.components(separatedBy: "|").last ?? rawFrom
         let cleanTo = rawTo.components(separatedBy: "|").last ?? rawTo
         
-        print("[SearchService] CLEAN FROM:", cleanFrom)
-        print("[SearchService] CLEAN TO:", cleanTo)
-        
-        
+        print("[SearchService]:\(#line)] \(#function) CLEAN FROM:", cleanFrom)
+        print("[SearchService]:\(#line)] \(#function) CLEAN TO:", cleanTo)
         
         let scheduleResult = try await service.getScheduleBetweenStations(
             from: cleanFrom,
@@ -56,18 +53,17 @@ func testFetchSearch(container: AppContainer) async {
             date: TestConstants.SearchServiceDate
         )
         
-        print("[SearchService] Segments count: \(scheduleResult.segments?.count ?? 0)")
+        print("[SearchService]:\(#line)] \(#function) Segments count: \(scheduleResult.segments?.count ?? 0)")
         
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         
         if let data = try? encoder.encode(scheduleResult),
            let jsonString = String(data: data, encoding: .utf8) {
-            print("[SearchService] FULL RESPONSE:\n\(jsonString)")
+            print("[SearchService]:\(#line)] \(#function) FULL RESPONSE:\n\(jsonString)")
         }
         
-        
     } catch {
-        print("[SearchService] Error fetching schedule: \(error)")
+        print("[SearchService]:\(#line)] \(#function) Error fetching schedule: \(error)")
     }
 }

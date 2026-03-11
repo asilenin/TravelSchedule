@@ -3,9 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     
     @StateObject private var viewModel = SettingsViewModel(prefs: ThemePreferences())
-    
     @State private var path = NavigationPath()
-    
     
     var body: some View {
         NavigationStack(path: $path) {

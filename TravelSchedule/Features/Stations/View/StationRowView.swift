@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct StationRowView: View {
-    
     let station: StationModel
     var body: some View {
         HStack {

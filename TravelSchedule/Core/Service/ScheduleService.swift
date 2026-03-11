@@ -24,15 +24,15 @@ final class ScheduleService: ScheduleServiceProtocol {
 func testFetchSchedule(container: AppContainer) async {
     do {
         let service = container.makeScheduleService()
-        print("[ScheduleService] Fetching Schedule...")
+        print("[ScheduleService]:\(#line)] \(#function) Fetching Schedule...")
 
         let schedule = try await service.getStationSchedule(
             station: TestConstants.ScheduleServiceStation,
             date: TestConstants.ScheduleServiceDate
         )
 
-        print("[ScheduleService] Schedule count: \(schedule.schedule?.count ?? 0)")
+        print("[ScheduleService]:\(#line)] \(#function) Schedule count: \(schedule.schedule?.count ?? 0)")
     } catch {
-        print("[ScheduleService] Error:", error)
+        print("[ScheduleService]:\(#line)] \(#function) Error:", error)
     }
 }

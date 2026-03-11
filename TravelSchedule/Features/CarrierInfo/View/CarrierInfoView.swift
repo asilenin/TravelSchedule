@@ -1,8 +1,6 @@
 import SwiftUI
 struct CarrierInfoView: View {
-    
     @StateObject private var viewModel: CarrierInfoViewModel
-    
     @Environment(\.dismiss) var dismiss
     
     init(carrier: CarrierInfo) {

@@ -85,7 +85,6 @@ struct NearestStationsService: NearestStationsServiceProtocol {
                 )
             )
         }
-
         return result
     }
 }
@@ -107,10 +106,10 @@ func testFetchNearestStations(network: NetworkClient) async {
             format: "json"
         )
 
-        print("[NearestStationsService] count:", stations.count)
-        print("[NearestStationsService] sample types:", stations.prefix(10).map { $0.stationType ?? "nil" })
-        print("[NearestStationsService] sample titles:", stations.prefix(10).map { $0.title })
+        print("[NearestStationsService]:\(#line)] \(#function) count:", stations.count)
+        print("[NearestStationsService]:\(#line)] \(#function) sample types:", stations.prefix(10).map { $0.stationType ?? "nil" })
+        print("[NearestStationsService]:\(#line)] \(#function) sample titles:", stations.prefix(10).map { $0.title })
     } catch {
-        print("[NearestStationsService] error:", error)
+        print("[NearestStationsService]:\(#line)] \(#function) error:", error)
     }
 }

@@ -1,9 +1,7 @@
 import SwiftUI
 
 struct ApplyTimeFilterButton: View {
-    
     let action: () -> Void
-    
     var body: some View {
         button
             .padding(.horizontal, 16)

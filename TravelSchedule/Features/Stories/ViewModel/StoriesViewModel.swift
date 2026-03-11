@@ -2,7 +2,6 @@ import Foundation
 import Combine
 
 final class StoriesViewModel: ObservableObject {
-
     @Published var stories: [StoryModel] = []
     @Published var currentStoryIndex: Int = 0
 

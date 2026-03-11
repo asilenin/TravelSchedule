@@ -1,11 +1,12 @@
 import SwiftUI
 
 struct NavigationView: View {
+    @Environment(\.dismiss) var dismiss
+    
     var title: String
     var showBackButton: Bool
     var backButtonWidth: CGFloat = 42
     var backAction: (() -> Void)?
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         HStack {

@@ -2,12 +2,10 @@ import SwiftUI
 import Combine
 
 struct CarrierSelectView: View {
-    
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: ScheduleViewModel
-    
     var titleText: String
-    
+
     init(segments: [Components.Schemas.Segment],
          titleText: String) {
         _viewModel = StateObject(wrappedValue: ScheduleViewModel(segments: segments))
@@ -35,7 +33,6 @@ struct CarrierSelectView: View {
             .background(.whiteTS)
         }
         .background(.whiteTS)
-        //.toolbar(.hidden, for: .navigationBar)
     }
     
     @ViewBuilder
@@ -77,8 +74,6 @@ struct CarrierSelectView: View {
     private var routeTitle: some View {
         Text(titleText)
             .font(.system(size: 24, weight: .bold))
-        //.lineLimit(nil)
-        //.fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
     }

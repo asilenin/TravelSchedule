@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct CarrierLogoView: View {
-    
     let logoURL: String?
     let carrierName: String
     let transfer: String?
@@ -61,7 +60,6 @@ struct CarrierLogoView: View {
         return url
     }
     
-    
     private var carrierInfo: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(carrierName)
@@ -76,7 +74,6 @@ struct CarrierLogoView: View {
                     .foregroundColor(.redUniversalTS)
             }
         }
-        
     }
 }
 

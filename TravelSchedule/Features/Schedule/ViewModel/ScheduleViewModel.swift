@@ -26,8 +26,7 @@ final class ScheduleViewModel: ObservableObject {
         transferChoice: TransferChoice?
     ) {
         var filtered = allSegments
-
-        // Filter by transfers
+        
         if let transferChoice {
             switch transferChoice {
             case .yes:
@@ -36,8 +35,7 @@ final class ScheduleViewModel: ObservableObject {
                 filtered = filtered.filter { ($0.transfers ?? 0) > 0 }
             }
         }
-
-        // Filter by departure time ranges
+        
         if !departureTimes.isEmpty {
             filtered = filtered.filter { segment in
                 guard let departure = segment.departure,
@@ -86,8 +84,7 @@ final class ScheduleViewModel: ObservableObject {
             .trimmingCharacters(in: .whitespacesAndNewlines)
         let carrierPhone = (carrier?.phone ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-
-
+        
         return CarrierInfo(
             carrierLogoName: carrierLogo,
             carrierFullName: carrierTitle.isEmpty ? "Перевозчик" : carrierTitle,

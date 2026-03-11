@@ -3,10 +3,8 @@ import Combine
 
 struct StoriesView: View {
     @ObservedObject var viewModel: StoriesViewModel
-    
     @Binding var showFullScreenStory: Bool
     @Environment(\.dismiss) var dismiss
-    
     @State private var progress: CGFloat
     @State private var timer: Timer.TimerPublisher
     @State private var cancellable: Cancellable?
@@ -120,7 +118,6 @@ struct StoriesView: View {
         Timer.publish(every: storyHelper.timerTickInternal, on: .main, in: .common)
     }
 }
-
 
 #Preview {
     StoriesView(

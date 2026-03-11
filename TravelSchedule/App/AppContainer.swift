@@ -47,7 +47,7 @@ final class AppContainer: ObservableObject {
         do {
             _ = try await stationsListService.getCities()
         } catch {
-            print("Preload failed:", error)
+            print("[AppContainer]:\(#line)] \(#function) Preload failed:", error)
         }
     }
 }

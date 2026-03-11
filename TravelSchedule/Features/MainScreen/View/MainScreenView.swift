@@ -5,7 +5,6 @@ struct MainScreenView: View {
     @EnvironmentObject private var container: AppContainer
     @StateObject private var viewModel: MainScreenViewModel
     
-    
     @State private var citySelectionForDeparture = false
     @State private var citySelectionForArrival = false
     @State private var navigateToCarrierSelect = false
