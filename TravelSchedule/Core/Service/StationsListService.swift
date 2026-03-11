@@ -1,0 +1,185 @@
+import Foundation
+
+actor StationsCache {
+    private var cached: [StationModel]?
+    
+    func get() -> [StationModel]? {
+        cached
+    }
+    
+    func set(_ value: [StationModel]) {
+        cached = value
+    }
+    
+    func clear() {
+        cached = nil
+    }
+}
+
+protocol StationsListServiceProtocol: Sendable {
+    func getStations() async throws -> [StationModel]
+    func getCities() async throws -> [CityModel]
+}
+
+struct StationsListService: StationsListServiceProtocol {
+    
+    private static let cache = StationsCache()
+    
+    private let network: NetworkClient
+    
+    init(network: NetworkClient) {
+        self.network = network
+    }
+    
+    func getStations() async throws -> [StationModel] {
+        
+        if let cached = await Self.cache.get() {
+            return cached
+        }
+        
+        let dto = try await network.getAllStations()
+        
+        // Filter only Russia (check exact title from API response)
+        let countries = (dto.countries ?? []).filter {
+            ($0.title ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .caseInsensitiveCompare("Россия") == .orderedSame
+        }
+        
+        var result: [StationModel] = []
+        result.reserveCapacity(10_000)
+        
+        var idOccurrences: [String: Int] = [:]
+        
+        
+        for country in countries {
+            let regions = country.regions ?? []
+            for region in regions {
+                let settlements = region.settlements ?? []
+                for settlement in settlements {
+                    let stations = settlement.stations ?? []
+                    for s in stations {
+                        
+                        // Skip invalid/empty names (UI relies on these)
+                        let stationTitle = (s.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                        let settlementTitle = (settlement.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !stationTitle.isEmpty, !settlementTitle.isEmpty else { continue }
+                        
+                        // Normalize + filter by station_type / transport_type
+                        let stationTypeRaw = (s.station_type ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                        let transportTypeRaw = (s.transport_type ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                        
+                        // Filter only rail-related stations for the app scope.
+                        // If later you want to support bus/plane/etc, expand this list.
+                        let allowedStationTypes: Set<String> = ["train_station", "station", "platform"]
+                        guard allowedStationTypes.contains(stationTypeRaw) else { continue }
+                        
+                        // Include both train and suburban (электричка) as "rail" transport types.
+                        let allowedTransportTypes: Set<String> = ["train", "suburban"]
+                        guard allowedTransportTypes.contains(transportTypeRaw) else { continue }
+                        
+                        // Convert empty strings to nil for the model layer
+                        let stationType: String? = stationTypeRaw.isEmpty ? nil : stationTypeRaw
+                        let transportType: String? = transportTypeRaw.isEmpty ? nil : transportTypeRaw
+                        
+                        let rawParts: [String?] = [
+                            country.title,
+                            region.title,
+                            settlement.title,
+                            s.title,
+                            s.station_type,
+                            s.transport_type,
+                            s.codes?.yandex_code,
+                            s.codes?.esr_code,
+                            s.lat.map { String($0) },
+                            s.lng.map { String($0) }
+                        ]
+
+                        let stableId = rawParts
+                            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+                            .filter { !$0.isEmpty }
+                            .joined(separator: "|")
+                        
+                        let yandexCode = (s.codes?.yandex_code ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                        guard !yandexCode.isEmpty else { continue }
+                        
+                        let baseId = "yandex|\(yandexCode)"
+
+                        let occurrence = idOccurrences[baseId, default: 0]
+                        idOccurrences[baseId] = occurrence + 1
+                        let finalId = occurrence == 0 ? baseId : "\(baseId)#\(occurrence + 1)"
+                        
+                        let model = StationModel(
+                            id: finalId,
+                            yandexCode: yandexCode,
+                            title: stationTitle,
+                            settlement: settlementTitle,
+                            shortTitle: s.short_title,
+                            popularTitle: s.popular_title,
+                            lat: s.lat,
+                            lng: s.lng,
+                            stationType: stationType,
+                            transportType: transportType
+                        )
+                        
+                        result.append(model)
+                    }
+                }
+            }
+        }
+        
+        await Self.cache.set(result)
+        return result
+    }
+    
+    func getCities() async throws -> [CityModel] {
+        let stations = try await getStations()
+        let grouped = Dictionary(grouping: stations) { $0.settlement ?? "Неизвестно" }
+
+        return grouped
+            .map { settlement, stations in
+                CityModel(
+                    id: settlement,
+                    name: settlement,
+                    stations: stations.sorted { lhs, rhs in
+                        func rank(_ type: String?) -> Int {
+                            switch type {
+                            case "train_station": return 0
+                            case "station": return 1
+                            case "platform": return 2
+                            default: return 3
+                            }
+                        }
+                        let lr = rank(lhs.stationType)
+                        let rr = rank(rhs.stationType)
+                        if lr != rr { return lr < rr }
+                        return lhs.title < rhs.title
+                    },
+                    selectedStation: nil
+                )
+            }
+            .sorted {
+                if $0.stations.count != $1.stations.count {
+                    return $0.stations.count > $1.stations.count
+                }
+                return $0.name < $1.name
+            }
+    }
+    
+}
+
+func testFetchStationsList(network: NetworkClient) async {
+    do {
+        let service = StationsListService(network: network)
+        print("[StationsListService] Fetching stations...")
+        
+        let stations = try await service.getStations()
+        
+        print("[StationsListService] Stations count: \(stations.count)")
+        if let first = stations.first {
+            print("[StationsListService] First station id/title: \(first.id) / \(first.title)")
+        }
+    } catch {
+        print("[StationsListService] Error fetching stations: \(error)")
+    }
+}
