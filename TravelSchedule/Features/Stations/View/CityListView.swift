@@ -34,11 +34,11 @@ struct CityListView: View {
                     case .failed(let error):
                         switch error {
                         case .noInternet:
-                            NoInternetView()
+                            ErrorView(type: .noInternet)
                         case .server:
-                            ServerErrorView()
+                            ErrorView(type: .serverError)
                         case .unknown:
-                            ServerErrorView()
+                            ErrorView(type: .appError)
                         }
                         
                     case .loaded:

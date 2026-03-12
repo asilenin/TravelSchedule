@@ -47,7 +47,7 @@ struct CarrierSelectView: View {
             
         case .error(let message):
             VStack(spacing: 16) {
-                ServerErrorView()
+                ErrorView(type: .serverError)
                 Text(message)
                     .font(.system(size: 14))
                     .foregroundColor(.grayUniversalTS)

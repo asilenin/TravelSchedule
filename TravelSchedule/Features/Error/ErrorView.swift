@@ -1,22 +1,20 @@
 import SwiftUI
 
-struct NoInternetView: View {
+struct ErrorView: View {
+    
+    let type: ErrorViewType
     
     var body: some View {
-        VStack{
-            Image(.noInternet)
+        VStack {
+            Image(type.image)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 223, height: 223)
                 .cornerRadius(70)
-               
-            Text("Нет интернета")
+            
+            Text(type.title)
                 .font(.system(size: 24, weight: .bold))
                 .padding(.top, 16)
         }
     }
-}
-
-#Preview {
-    NoInternetView()
 }

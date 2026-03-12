@@ -7,7 +7,7 @@ struct AgreementView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            VStack(spacing: .zero) {
                 NavigationView(title: "Пользовательское соглашение", showBackButton: true, backAction: {
                     dismiss()
                 })
