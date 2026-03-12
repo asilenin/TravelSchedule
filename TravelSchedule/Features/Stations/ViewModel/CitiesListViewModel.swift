@@ -3,22 +3,8 @@ import Combine
 
 @MainActor
 final class CitiesListViewModel: ObservableObject {
-    
-    enum State: Equatable {
-        case idle
-        case loading
-        case loaded
-        case failed(AppError)
-    }
-    
-    enum AppError: Equatable {
-        case noInternet
-        case server
-        case unknown
-    }
-    
     @Published private(set) var cities: [CityModel] = []
-    @Published private(set) var state: State = .idle
+    @Published private(set) var state: CitiesListState = .idle
     
     private let service: StationsListServiceProtocol
     
@@ -41,16 +27,16 @@ final class CitiesListViewModel: ObservableObject {
         
     }
     
-    private func mapError(_ error: Error) -> AppError {
+    private func mapError(_ error: Error) -> ErrorViewType {
         let nsError = error as NSError
         if nsError.domain == NSURLErrorDomain {
             return .noInternet
         }
         
         if (500...599).contains(nsError.code) {
-            return .server
+            return .serverError
         }
         
-        return .unknown
+        return .appError
     }
 }
