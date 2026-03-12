@@ -2,11 +2,16 @@ import SwiftUI
 import Combine
 
 struct StoryHelper {
+
+    // MARK: - Public Properties
+
     let timerTickInternal: TimeInterval
     let secondsPerStory: TimeInterval
     let storiesCount: Int
     let progressPerTick: CGFloat
-    
+
+    // MARK: - Initializers
+
     init(
         storiesCount: Int,
         secondsPerStory: TimeInterval = 5,

@@ -1,28 +1,28 @@
 import SwiftUI
 
-extension CGFloat {
-    static let progressBarCornerRadius: CGFloat = 6
-    static let progressBarHeight: CGFloat = 6
-}
-
 struct ProgressBar: View {
+    
+    // MARK: - Public Properties
+    
     let numberOfSections: Int
     let progress: CGFloat
 
+    // MARK: - Visual Components
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: .progressBarCornerRadius)
-                    .frame(width: geometry.size.width, height: .progressBarHeight)
+                RoundedRectangle(cornerRadius: Layout.progressBarCornerRadius)
+                    .frame(width: geometry.size.width, height: Layout.progressBarHeight)
                     .foregroundColor(.whiteUniversalTS)
 
-                RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+                RoundedRectangle(cornerRadius: Layout.progressBarCornerRadius)
                     .frame(
                         width: min(
                             progress * geometry.size.width,
                             geometry.size.width
                         ),
-                        height: .progressBarHeight
+                        height: Layout.progressBarHeight
                     )
                     .foregroundColor(.blueUniversalTS)
             }
@@ -34,8 +34,13 @@ struct ProgressBar: View {
 }
 
 private struct MaskView: View {
+    
+    // MARK: - Public Properties
+    
     let numberOfSections: Int
 
+    // MARK: - Visual Components
+    
     var body: some View {
         HStack {
             ForEach(0..<numberOfSections, id: \.self) { _ in
@@ -46,10 +51,13 @@ private struct MaskView: View {
 }
 
 private struct MaskFragmentView: View {
+    
+    // MARK: - Visual Components
+    
     var body: some View {
-        RoundedRectangle(cornerRadius: .progressBarCornerRadius)
+        RoundedRectangle(cornerRadius: Layout.progressBarCornerRadius)
             .fixedSize(horizontal: false, vertical: true)
-            .frame(height: .progressBarHeight)
+            .frame(height: Layout.progressBarHeight)
             .foregroundStyle(.white)
     }
 }

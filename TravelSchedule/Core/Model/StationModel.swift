@@ -1,6 +1,9 @@
 import Foundation
 
 struct StationModel: Identifiable, Sendable, Hashable {
+    
+    // MARK: - Public Properties
+
     let id: String
     let yandexCode: String? 
     let title: String

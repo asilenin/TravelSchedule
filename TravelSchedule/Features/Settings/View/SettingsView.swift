@@ -1,10 +1,14 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
+
+    // MARK: - Private Properties
+
     @StateObject private var viewModel = SettingsViewModel(prefs: ThemePreferences())
     @State private var path = NavigationPath()
-    
+
+    // MARK: - Visual Components
+
     var body: some View {
         NavigationStack(path: $path) {
             VStack(spacing: 0) {
@@ -25,6 +29,7 @@ struct SettingsView: View {
                         .padding(.vertical, 19)
                         .padding(.horizontal, 16)
                         .background(.whiteTS)
+
                         NavigationLink {
                             AgreementView()
                         } label: {
@@ -42,20 +47,22 @@ struct SettingsView: View {
                             .padding(.horizontal, 16)
                         }
                         .buttonStyle(PlainButtonStyle())
+
                         Spacer()
                             .frame(height: 32)
-                        
                     }
                     .background(.whiteTS)
                     .frame(maxWidth: .infinity)
                 }
+
                 Spacer()
-                
+
                 VStack(spacing: 16) {
                     Text("Приложение использует API «Яндекс.Расписания»")
                         .font(.system(size: 12))
                         .foregroundStyle(.blackTS)
                         .kerning(0.4)
+
                     Text("Версия 1.0 (beta)")
                         .font(.system(size: 12))
                         .foregroundStyle(.blackTS)
@@ -68,6 +75,8 @@ struct SettingsView: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     SettingsView()

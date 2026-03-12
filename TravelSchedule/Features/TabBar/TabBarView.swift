@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct TabBarView: View {
-    
+
+    // MARK: - Initializers
+
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-       
+
         appearance.backgroundColor = .whiteTS
         appearance.shadowColor = UIColor { trait in
             trait.userInterfaceStyle == .dark ? .black : .grayUniversalTS
@@ -17,9 +19,12 @@ struct TabBarView: View {
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
-    
+
+    // MARK: - Visual Components
+
     var body: some View {
         TabView {
+
             NavigationStack {
                 MainScreenView()
             }
@@ -27,7 +32,7 @@ struct TabBarView: View {
                 Image(.travel).renderingMode(.template)
             }
             .tag(0)
-            
+
             NavigationStack {
                 SettingsView()
             }
@@ -39,6 +44,8 @@ struct TabBarView: View {
         .tint(.black)
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     TabBarView()

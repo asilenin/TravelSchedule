@@ -3,8 +3,12 @@ import Combine
 
 struct StoriesSectionView: View {
 
+    // MARK: - Public Properties
+
     @ObservedObject var viewModel: StoriesViewModel
     @Binding var showStories: Bool
+
+    // MARK: - Visual Components
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {

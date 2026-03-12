@@ -3,70 +3,57 @@ import Combine
 
 @MainActor
 final class MainScreenViewModel: ObservableObject {
-    
-    // MARK: - State
-    enum State: Equatable {
-        case idle
-        case loading
-        case loaded(Components.Schemas.Segments)
-        case failed(AppError)
-    }
-    
-    enum AppError: Equatable {
-        case noInternet
-        case server
-        case unknown
-    }
-    
-    // MARK: - Published
-    @Published private(set) var state: State = .idle
+
+    // MARK: - Public Properties
+
+    @Published private(set) var state: MainScreenState = .idle
     @Published var departureCity: City?
     @Published var arrivalCity: City?
-    
-    // MARK: - Dependencies
-    private let searchService: SearchServiceProtocol
-    
-    // MARK: - Init
-    init(searchService: SearchServiceProtocol) {
-        self.searchService = searchService
-    }
-    
+
     var isFindButtonEnabled: Bool {
         departureCity?.selectedStation != nil &&
         arrivalCity?.selectedStation != nil
     }
-    
+
     var segments: [Components.Schemas.Segment] {
-        if case let .loaded(response) = state {
-            return response.segments ?? []
-        }
-        return []
+        guard case let .loaded(response) = state else { return [] }
+        return response.segments ?? []
     }
-    
+
     var routeTitle: String {
         let fromStation = departureCity?.selectedStation?.title ?? ""
         let toStation = arrivalCity?.selectedStation?.title ?? ""
-        
         return "\(fromStation) → \(toStation)"
     }
-    
+
+    // MARK: - Private Properties
+
+    private let searchService: SearchServiceProtocol
+
+    // MARK: - Initializers
+
+    init(searchService: SearchServiceProtocol) {
+        self.searchService = searchService
+    }
+
+    // MARK: - Public Methods
+
     func swapCities() {
         let temp = departureCity
         departureCity = arrivalCity
         arrivalCity = temp
     }
-    
-    // MARK: - Public API
+
     func search(date: String? = nil) async {
         guard
-            let fromStationId = self.departureCity?.selectedStation?.yandexCode,
-            let toStationId = self.arrivalCity?.selectedStation?.yandexCode
+            let fromStationId = departureCity?.selectedStation?.yandexCode,
+            let toStationId = arrivalCity?.selectedStation?.yandexCode
         else {
             return
         }
-        
+
         state = .loading
-        
+
         do {
             let result = try await searchService.getScheduleBetweenStations(
                 from: fromStationId,
@@ -78,23 +65,24 @@ final class MainScreenViewModel: ObservableObject {
             state = .failed(mapError(error))
         }
     }
-    
+
     func reset() {
         state = .idle
     }
-    
-    // MARK: - Error mapping
-    private func mapError(_ error: Error) -> AppError {
+
+    // MARK: - Private Methods
+
+    private func mapError(_ error: Error) -> ErrorViewType {
         let nsError = error as NSError
-        
+
         if nsError.domain == NSURLErrorDomain {
             return .noInternet
         }
-        
+
         if (500...599).contains(nsError.code) {
-            return .server
+            return .serverError
         }
-        
-        return .unknown
+
+        return .appError
     }
 }

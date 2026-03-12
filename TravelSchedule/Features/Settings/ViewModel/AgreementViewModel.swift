@@ -1,7 +1,9 @@
 import Foundation
 
 @MainActor
-final class AgreementViewModel: ObservableObject {
+final class AgreementViewModel {
+    
+    // MARK: - Private Properties
 
     let title = "Оферта на оказание образовательных услуг дополнительного образования Яндекс.Практикум для физических лиц"
 

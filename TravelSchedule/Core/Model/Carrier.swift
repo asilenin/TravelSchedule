@@ -1,6 +1,9 @@
 import Foundation
 
 struct Сarrier: Identifiable, Sendable {
+
+    // MARK: - Public Properties
+
     let id = UUID()
     let carrierLogoName: String
     let carrierName: String
@@ -10,7 +13,11 @@ struct Сarrier: Identifiable, Sendable {
     let duration: String
     let date: String
 }
+
 struct CarrierInfo: Sendable {
+
+    // MARK: - Public Properties
+
     let carrierLogoName: String
     let carrierFullName: String
     let email: String

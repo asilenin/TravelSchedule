@@ -1,13 +1,23 @@
 import SwiftUI
 
 struct ChevronBackButton: View {
-    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
+
+    // MARK: - Public Properties
+
     let action: () -> Void
-    
+
+    // MARK: - Private Properties
+
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled: Bool = false
+
+    // MARK: - Visual Components
+
     var body: some View {
-        Button(action: {
-            action()
-        }) {
+        Button(
+            action: {
+                action()
+            }
+        ) {
             Image(.chevronBack)
                 .resizable()
                 .renderingMode(.template)

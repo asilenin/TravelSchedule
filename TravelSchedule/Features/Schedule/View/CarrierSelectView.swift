@@ -2,16 +2,30 @@ import SwiftUI
 import Combine
 
 struct CarrierSelectView: View {
-    @Environment(\.dismiss) var dismiss
-    @StateObject private var viewModel: ScheduleViewModel
+
+    // MARK: - Public Properties
+
     var titleText: String
 
-    init(segments: [Components.Schemas.Segment],
-         titleText: String) {
-        _viewModel = StateObject(wrappedValue: ScheduleViewModel(segments: segments))
+    // MARK: - Private Properties
+
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel: ScheduleViewModel
+
+    // MARK: - Initializers
+
+    init(
+        segments: [Components.Schemas.Segment],
+        titleText: String
+    ) {
+        _viewModel = StateObject(
+            wrappedValue: ScheduleViewModel(segments: segments)
+        )
         self.titleText = titleText
     }
-    
+
+    // MARK: - Visual Components
+
     var body: some View {
         ZStack(alignment: .bottom) {
             mainContent
@@ -20,11 +34,15 @@ struct CarrierSelectView: View {
         .toolbar(.hidden, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
     }
-    
+
+    // MARK: - Private Methods
+
     private var mainContent: some View {
         VStack(spacing: 0) {
             navigationHeader
+
             Spacer()
+
             VStack(alignment: .leading, spacing: 16) {
                 routeTitle
                 content
@@ -34,27 +52,29 @@ struct CarrierSelectView: View {
         }
         .background(.whiteTS)
     }
-    
+
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
+
         case .idle:
             EmptyView()
-            
+
         case .loading:
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
+
         case .error(let message):
             VStack(spacing: 16) {
                 ErrorView(type: .serverError)
+
                 Text(message)
                     .font(.system(size: 14))
                     .foregroundColor(.grayUniversalTS)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
             }
-            
+
         case .loaded(let segments):
             if segments.isEmpty {
                 emptyScheduleView
@@ -63,21 +83,24 @@ struct CarrierSelectView: View {
             }
         }
     }
-    
-    
+
     private var navigationHeader: some View {
-        NavigationView(title: "", showBackButton: true, backAction: {
-            dismiss()
-        })
+        NavigationHeaderView(
+            title: "",
+            showBackButton: true,
+            backAction: {
+                dismiss()
+            }
+        )
     }
-    
+
     private var routeTitle: some View {
         Text(titleText)
             .font(.system(size: 24, weight: .bold))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
     }
-    
+
     private var emptyScheduleView: some View {
         VStack {
             Text("Вариантов нет")
@@ -85,11 +108,14 @@ struct CarrierSelectView: View {
                 .foregroundColor(.blackTS)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.top, 221)
+
             Spacer()
         }
     }
-    
-    private func scheduleListView(segments: [Components.Schemas.Segment]) -> some View {
+
+    private func scheduleListView(
+        segments: [Components.Schemas.Segment]
+    ) -> some View {
         ScrollView {
             VStack(spacing: 0) {
                 ForEach(Array(segments.enumerated()), id: \.offset) { _, segment in
@@ -105,16 +131,13 @@ struct CarrierSelectView: View {
             }
         }
     }
-    
+
     private var navigationLinkButton: some View {
         NavigationLink {
-            TimeFilterView(
-                viewModel: viewModel
-            )
+            TimeFilterView(viewModel: viewModel)
         } label: {
-            SpecifyTimeButton {
-            }
-            .disabled(true)
+            SpecifyTimeButton {}
+                .disabled(true)
         }
     }
 }

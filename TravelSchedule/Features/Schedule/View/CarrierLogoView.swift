@@ -1,17 +1,24 @@
 import SwiftUI
 
 struct CarrierLogoView: View {
+
+    // MARK: - Public Properties
+
     let logoURL: String?
     let carrierName: String
     let transfer: String?
-    
+
+    // MARK: - Visual Components
+
     var body: some View {
         HStack(spacing: 8) {
             logoImage
             carrierInfo
         }
     }
-    
+
+    // MARK: - Private Methods
+
     private var logoImage: some View {
         Group {
             if let url = validURL {
@@ -20,14 +27,17 @@ struct CarrierLogoView: View {
                     case .empty:
                         ProgressView()
                             .frame(width: 38, height: 38)
+
                     case .success(let image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 38, height: 38)
                             .cornerRadius(12)
+
                     case .failure:
                         placeholder
+
                     @unknown default:
                         placeholder
                     }
@@ -37,49 +47,50 @@ struct CarrierLogoView: View {
             }
         }
     }
-    
+
     private var placeholder: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.gray.opacity(0.2))
                 .frame(width: 38, height: 38)
-            
+
             Text(String(carrierName.prefix(1)))
                 .font(.system(size: 16, weight: .bold))
                 .foregroundColor(.blackUniversalTS)
         }
     }
-    
+
+    private var carrierInfo: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(carrierName)
+                .font(.system(size: 17))
+                .kerning(-0.41)
+                .foregroundColor(.blackUniversalTS)
+
+            if let transfer = transfer, !transfer.isEmpty {
+                Text(transfer)
+                    .font(.system(size: 12))
+                    .kerning(0.4)
+                    .foregroundColor(.redUniversalTS)
+            }
+        }
+    }
+
     private var validURL: URL? {
         guard
             let logoURL,
             !logoURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
             let url = URL(string: logoURL)
         else { return nil }
-        
+
         return url
-    }
-    
-    private var carrierInfo: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(carrierName)
-                .font(.system(size: 17, weight: .regular))
-                .kerning(-0.41)
-                .foregroundColor(.blackUniversalTS)
-            
-            if let transfer = transfer, !transfer.isEmpty {
-                Text(transfer)
-                    .font(.system(size: 12, weight: .regular))
-                    .kerning(0.4)
-                    .foregroundColor(.redUniversalTS)
-            }
-        }
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    List
-    {
+    List {
         CarrierLogoView(
             logoURL: "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif",
             carrierName: "Урал логистика",

@@ -1,6 +1,8 @@
 import Foundation
 import OpenAPIRuntime
 
+// MARK: - Types
+
 typealias StationsListDTO = Components.Schemas.AllStationsResponse
 typealias NearestStationsDTO = Components.Schemas.Stations
 typealias CarrierDTO = Components.Schemas.CarrierResponse
@@ -10,29 +12,16 @@ typealias ThreadStationsDTO = Components.Schemas.ThreadStationsResponse
 typealias NearestCityDTO = Components.Schemas.NearestCityResponse
 typealias CopyrightDTO = Components.Schemas.CopyrightWrapper
 
-enum NetworkClientError: Error, LocalizedError {
-    case unexpectedResponse
-    case responseBodyTooLarge(limit: Int)
-
-    var errorDescription: String? {
-        switch self {
-        case .unexpectedResponse:
-            return "Unexpected server response"
-        case .responseBodyTooLarge(let limit):
-            return "Response body exceeded limit \(limit) bytes"
-        }
-    }
-}
-
 actor NetworkClient {
 
-    // MARK: - Dependencies
+    // MARK: - Private Properties
+
     private let client: Client
     private let apikey: String
-
-    // MARK: - Tunables
     private let stationsListBodyLimit: Int
     nonisolated private let decoder: JSONDecoder
+
+    // MARK: - Initializers
 
     init(
         client: Client,
@@ -44,15 +33,17 @@ actor NetworkClient {
         self.stationsListBodyLimit = stationsListBodyLimit
 
         let decoder = JSONDecoder()
-        //decoder.keyDecodingStrategy = .convertFromSnakeCase
         self.decoder = decoder
     }
+
+    // MARK: - Public Methods
 
     func getAllStations() async throws -> StationsListDTO {
         let response = try await client.getAllStations(query: .init(apikey: apikey))
 
         let body = try await response.ok.body.text_html_charset_utf_hyphen_8
         let data = try await Data(collecting: body, upTo: stationsListBodyLimit)
+
         return try await MainActor.run {
             try decoder.decode(StationsListDTO.self, from: data)
         }
@@ -69,7 +60,7 @@ actor NetworkClient {
         lang: String? = nil,
         format: String? = nil
     ) async throws -> NearestStationsDTO {
-        
+
         let response = try await client.getNearestStations(query: .init(
             apikey: apikey,
             lat: lat,
@@ -82,6 +73,7 @@ actor NetworkClient {
             offset: offset,
             limit: limit
         ))
+
         return try await response.ok.body.json
     }
 
@@ -91,6 +83,7 @@ actor NetworkClient {
         lang: String? = nil,
         format: String? = nil
     ) async throws -> CarrierDTO {
+
         let response = try await client.getCarrierInfo(query: .init(
             apikey: apikey,
             code: code,
@@ -98,6 +91,7 @@ actor NetworkClient {
             lang: lang,
             format: format
         ))
+
         return try await response.ok.body.json
     }
 
@@ -113,6 +107,7 @@ actor NetworkClient {
         transfers: String? = nil,
         resultTimezone: String? = nil
     ) async throws -> SegmentsDTO {
+
         let response = try await client.getScheduleBetweenStations(query: .init(
             apikey: apikey,
             from: from,
@@ -126,6 +121,7 @@ actor NetworkClient {
             result_timezone: resultTimezone,
             transfers: transfers.flatMap { Components.Parameters.Transfers(rawValue: $0) }
         ))
+
         return try await response.ok.body.json
     }
 
@@ -140,6 +136,7 @@ actor NetworkClient {
         lang: String? = nil,
         format: String? = nil
     ) async throws -> ScheduleDTO {
+
         let response = try await client.getStationSchedule(query: .init(
             apikey: apikey,
             station: station,
@@ -152,6 +149,7 @@ actor NetworkClient {
             system: system,
             result_timezone: resultTimezone
         ))
+
         return try await response.ok.body.json
     }
 
@@ -164,6 +162,7 @@ actor NetworkClient {
         lang: String? = nil,
         format: String? = nil
     ) async throws -> ThreadStationsDTO {
+
         let response = try await client.getRouteStations(query: .init(
             apikey: apikey,
             uid: uid,
@@ -174,6 +173,7 @@ actor NetworkClient {
             date: date,
             show_systems: showSystems
         ))
+
         return try await response.ok.body.json
     }
 
@@ -184,6 +184,7 @@ actor NetworkClient {
         lang: String? = nil,
         format: String? = nil
     ) async throws -> NearestCityDTO {
+
         let response = try await client.getNearestSettlement(query: .init(
             apikey: apikey,
             lat: lat,
@@ -192,6 +193,7 @@ actor NetworkClient {
             lang: lang,
             format: format
         ))
+
         return try await response.ok.body.json
     }
 

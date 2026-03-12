@@ -2,18 +2,8 @@ import SwiftUI
 
 @main
 struct TravelScheduleApp: App {
-    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled = false
-    @State private var container: AppContainer?
-    @State private var initError: Bool = false
-    
-    init() {
-        do {
-            _container = State(initialValue: try AppContainer())
-        } catch {
-            _container = State(initialValue: nil)
-            _initError = State(initialValue: true)
-        }
-    }
+
+    // MARK: - Visual Components
 
     var body: some Scene {
         WindowGroup {
@@ -26,6 +16,23 @@ struct TravelScheduleApp: App {
                 }
             }
             .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
+        }
+    }
+
+    // MARK: - Private Properties
+
+    @AppStorage("isDarkModeEnabled") private var isDarkModeEnabled = false
+    @State private var container: AppContainer?
+    @State private var initError: Bool = false
+
+    // MARK: - Initializers
+
+    init() {
+        do {
+            _container = State(initialValue: try AppContainer())
+        } catch {
+            _container = State(initialValue: nil)
+            _initError = State(initialValue: true)
         }
     }
 }

@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - Types
+
 protocol NearestStationsServiceProtocol: Sendable {
     func getNearestStations(
         lat: Double,
@@ -16,11 +18,17 @@ protocol NearestStationsServiceProtocol: Sendable {
 
 struct NearestStationsService: NearestStationsServiceProtocol {
 
+    // MARK: - Private Properties
+
     private let network: NetworkClient
+
+    // MARK: - Initializers
 
     init(network: NetworkClient) {
         self.network = network
     }
+
+    // MARK: - Public Methods
 
     func getNearestStations(
         lat: Double,
@@ -55,6 +63,7 @@ struct NearestStationsService: NearestStationsServiceProtocol {
             guard !title.isEmpty else { continue }
 
             let code = (s.code ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+
             let fallbackComponents: [String] = [
                 title,
                 s.lat.map { String($0) } ?? "",
@@ -67,8 +76,9 @@ struct NearestStationsService: NearestStationsServiceProtocol {
 
             let id = code.isEmpty ? fallbackId : code
             guard !id.isEmpty else { continue }
-            
-            let yandexCode = (s.codes?.yandex_code ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+
+            let yandexCode = (s.codes?.yandex_code ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
 
             result.append(
                 StationModel(
@@ -85,9 +95,12 @@ struct NearestStationsService: NearestStationsServiceProtocol {
                 )
             )
         }
+
         return result
     }
 }
+
+// MARK: - Private Methods
 
 @MainActor
 func testFetchNearestStations(network: NetworkClient) async {
@@ -109,6 +122,7 @@ func testFetchNearestStations(network: NetworkClient) async {
         print("[NearestStationsService]:\(#line)] \(#function) count:", stations.count)
         print("[NearestStationsService]:\(#line)] \(#function) sample types:", stations.prefix(10).map { $0.stationType ?? "nil" })
         print("[NearestStationsService]:\(#line)] \(#function) sample titles:", stations.prefix(10).map { $0.title })
+
     } catch {
         print("[NearestStationsService]:\(#line)] \(#function) error:", error)
     }

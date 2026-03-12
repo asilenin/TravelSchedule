@@ -7,17 +7,21 @@ protocol CarrierServiceProtocol {
 }
 
 final class CarrierService: CarrierServiceProtocol {
+
     // MARK: - Private Properties
+
     private let client: Client
     private let apikey: String
-    
+
     // MARK: - Initializers
+
     init(client: Client, apikey: String) {
         self.client = client
         self.apikey = apikey
     }
-    
+
     // MARK: - Public Methods
+
     func getCarrierInfo(code: String) async throws -> Carrier {
         let response = try await client.getCarrierInfo(query: .init(
             apikey: apikey,
@@ -27,17 +31,23 @@ final class CarrierService: CarrierServiceProtocol {
     }
 }
 
+// MARK: - Private Methods
+
 func testFetchCarrier() {
-    Task{
+    Task {
         do {
             let service = try ServiceFactory.makeCarrierService()
             print("[CarrierService]:\(#line)] \(#function) Fetching info...")
+
             let info = try await service.getCarrierInfo(
                 code: TestConstants.CarrierServiceCode
             )
+
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
+
             var jsonString: String?
+
             if let jsonData = try? encoder.encode(info),
                let dataString = String(data: jsonData, encoding: .utf8) {
                 jsonString = dataString
@@ -45,6 +55,7 @@ func testFetchCarrier() {
             } else {
                 print("[CarrierService]:\(#line)] \(#function) Successfully fetched info (debug description): \(info)")
             }
+
         } catch {
             print("[CarrierService]:\(#line)] \(#function) Error fetching info: \(error)")
         }

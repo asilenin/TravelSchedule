@@ -1,9 +1,14 @@
 import SwiftUI
 
 struct TravelCheckboxView: View {
+
+    // MARK: - Public Properties
+
     let title: String
     let isSelected: Bool
     let action: () -> Void
+
+    // MARK: - Visual Components
 
     var body: some View {
         Button(action: action) {
@@ -11,7 +16,9 @@ struct TravelCheckboxView: View {
                 Text(title)
                     .font(.system(size: 17, weight: .regular))
                     .foregroundColor(.blackTS)
+
                 Spacer()
+
                 Image(systemName: isSelected ? "checkmark.square.fill" : "square")
                     .font(.title2)
                     .foregroundColor(.blackTS)
@@ -19,6 +26,6 @@ struct TravelCheckboxView: View {
             .contentShape(Rectangle())
             .padding(.vertical, 8)
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
     }
 }

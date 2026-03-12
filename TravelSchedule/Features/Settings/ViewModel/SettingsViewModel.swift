@@ -4,14 +4,22 @@ import Combine
 @MainActor
 final class SettingsViewModel: ObservableObject {
 
-    private let prefs: ThemePreferencesProtocol
+    // MARK: - Public Properties
 
     @Published private(set) var isDarkModeEnabled: Bool
+
+    // MARK: - Private Properties
+
+    private let prefs: ThemePreferencesProtocol
+
+    // MARK: - Initializers
 
     init(prefs: ThemePreferencesProtocol) {
         self.prefs = prefs
         self.isDarkModeEnabled = prefs.isDarkModeEnabled
     }
+
+    // MARK: - Public Methods
 
     func setDarkMode(_ newValue: Bool) {
         isDarkModeEnabled = newValue

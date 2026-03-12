@@ -4,6 +4,8 @@ import OpenAPIURLSession
 
 enum APIFactory {
 
+    // MARK: - Public Methods
+
     static func makeClient() throws -> Client {
         Client(
             serverURL: try Servers.Server1.url(),

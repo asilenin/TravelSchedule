@@ -2,14 +2,22 @@ import SwiftUI
 import Combine
 
 struct MainScreenView: View {
+
+    // MARK: - Public Properties
+
     @EnvironmentObject private var container: AppContainer
+
+    // MARK: - Private Properties
+
     @StateObject private var viewModel: MainScreenViewModel
-    
+    @StateObject private var storiesViewModel = StoriesViewModel()
+
     @State private var citySelectionForDeparture = false
     @State private var citySelectionForArrival = false
     @State private var navigateToCarrierSelect = false
     @State private var showFullScreenStory = false
-    @StateObject private var storiesViewModel = StoriesViewModel()
+
+    // MARK: - Initializers
 
     init() {
         _viewModel = StateObject(
@@ -18,7 +26,9 @@ struct MainScreenView: View {
             )
         )
     }
-    
+
+    // MARK: - Visual Components
+
     var body: some View {
         ZStack {
             NavigationStack {
@@ -28,6 +38,7 @@ struct MainScreenView: View {
                             viewModel: storiesViewModel,
                             showStories: $showFullScreenStory
                         )
+
                         routeSelectionSection
                         findButtonSection
                     }
@@ -39,7 +50,6 @@ struct MainScreenView: View {
                     viewModel: container.makeCitiesListViewModel()
                 )
             }
-
             .fullScreenCover(isPresented: $citySelectionForArrival) {
                 CityListView(
                     selectedCity: $viewModel.arrivalCity,
@@ -62,19 +72,32 @@ struct MainScreenView: View {
         }
         .background(.whiteTS)
     }
-    
+
+    // MARK: - Private Methods
+
     private var routeSelectionSection: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(.blueUniversalTS)
                 .frame(width: 343, height: 128)
-            
+
             HStack(spacing: -32) {
                 VStack {
-                    cityButton(title: displayText(for: viewModel.departureCity, defaultText: "Откуда")) {
+                    cityButton(
+                        title: displayText(
+                            for: viewModel.departureCity,
+                            defaultText: "Откуда"
+                        )
+                    ) {
                         citySelectionForDeparture = true
                     }
-                    cityButton(title: displayText(for: viewModel.arrivalCity, defaultText: "Куда")) {
+
+                    cityButton(
+                        title: displayText(
+                            for: viewModel.arrivalCity,
+                            defaultText: "Куда"
+                        )
+                    ) {
                         citySelectionForArrival = true
                     }
                 }
@@ -83,13 +106,14 @@ struct MainScreenView: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(.whiteUniversalTS)
                 )
+
                 swapButton
             }
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
     }
-    
+
     private var swapButton: some View {
         Button {
             viewModel.swapCities()
@@ -103,20 +127,20 @@ struct MainScreenView: View {
         .padding(.leading, 16)
         .frame(width: 84, height: 128)
     }
-    
+
     private var findButtonSection: some View {
-        guard viewModel.departureCity?.selectedStation != nil &&
+        guard viewModel.departureCity?.selectedStation != nil,
               viewModel.arrivalCity?.selectedStation != nil else {
             return AnyView(EmptyView())
         }
-        
+
         return AnyView(
-            Button(action: {
+            Button {
                 Task {
                     await viewModel.search()
                     navigateToCarrierSelect = true
                 }
-            }) {
+            } label: {
                 Text("Найти")
                     .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.whiteUniversalTS)
@@ -124,16 +148,20 @@ struct MainScreenView: View {
                     .background(.blueUniversalTS)
                     .cornerRadius(16)
             }
-                .buttonStyle(.plain)
-                .padding(.top, 16)
+            .buttonStyle(.plain)
+            .padding(.top, 16)
         )
     }
-    
+
     private func cityButton(title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: 17))
-                .foregroundColor(title == "Откуда" || title == "Куда" ? .grayUniversalTS : .blackUniversalTS)
+                .foregroundColor(
+                    title == "Откуда" || title == "Куда"
+                    ? .grayUniversalTS
+                    : .blackUniversalTS
+                )
                 .kerning(-0.41)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 14)
@@ -141,15 +169,19 @@ struct MainScreenView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
+
     private func displayText(for city: City?, defaultText: String) -> String {
         guard let city else { return defaultText }
+
         if let station = city.selectedStation {
             return station.title
         }
+
         return city.name
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     MainScreenView()

@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct TravelCardView: View {
-    
+
+    // MARK: - Public Properties
+
     let segment: Components.Schemas.Segment
+
+    // MARK: - Visual Components
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -15,6 +19,8 @@ struct TravelCardView: View {
         .padding(.horizontal)
         .padding(.bottom, 8)
     }
+
+    // MARK: - Private Methods
 
     private var carrierInfoSection: some View {
         HStack {
@@ -32,7 +38,7 @@ struct TravelCardView: View {
                 .padding(.trailing, -7)
         }
     }
-    
+
     private var timeSection: some View {
         HStack(alignment: .center) {
             departureTimeView
@@ -42,7 +48,7 @@ struct TravelCardView: View {
             arrivalTimeView
         }
     }
-    
+
     private var departureTimeView: some View {
         Text(departureTime)
             .foregroundColor(.blackUniversalTS)
@@ -50,22 +56,24 @@ struct TravelCardView: View {
             .kerning(-0.41)
             .frame(width: 46, alignment: .leading)
     }
-    
+
     private var durationView: some View {
         HStack(spacing: 4) {
             Rectangle()
                 .foregroundColor(.grayUniversalTS)
                 .frame(height: 1)
+
             Text(durationText)
                 .foregroundColor(.blackUniversalTS)
                 .font(.system(size: 12, weight: .regular))
                 .fixedSize()
+
             Rectangle()
                 .foregroundColor(.grayUniversalTS)
                 .frame(height: 1)
         }
     }
-    
+
     private var arrivalTimeView: some View {
         Text(arrivalTime)
             .foregroundColor(.blackUniversalTS)
@@ -75,32 +83,33 @@ struct TravelCardView: View {
     }
 }
 
-// MARK: - Mapping helpers
+// MARK: - Private Methods
 
 private extension TravelCardView {
-    
+
     var carrierName: String {
         segment.thread?.carrier?.title ?? "—"
     }
-    
+
     var carrierLogoURL: String? {
         segment.thread?.carrier?.logo
     }
-    
+
     var hasTransfers: Bool {
         (segment.transfers ?? 0) > 0
     }
-    
+
     var departureTime: String {
         formatTime(segment.departure)
     }
-    
+
     var arrivalTime: String {
         formatTime(segment.arrival)
     }
-    
+
     var durationText: String {
         guard let duration = segment.duration else { return "" }
+
         let hours = duration / 3600
         let minutes = (duration % 3600) / 60
         var components: [String] = []
@@ -115,7 +124,11 @@ private extension TravelCardView {
 
         return components.joined(separator: " ")
     }
-    
+
+    var formattedDate: String {
+        formatDate(segment.start_date)
+    }
+
     func hoursWord(_ value: Int) -> String {
         switch value % 10 {
         case 1 where value % 100 != 11: return "час"
@@ -131,17 +144,13 @@ private extension TravelCardView {
         default: return "минут"
         }
     }
-    
-    var formattedDate: String {
-        formatDate(segment.start_date)
-    }
-    
+
     func formatTime(_ timeString: String?) -> String {
         guard let timeString else { return "" }
 
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime]
-        
+
         guard let date = isoFormatter.date(from: timeString) else {
             print("Failed to parse time:", timeString)
             return timeString
@@ -150,12 +159,13 @@ private extension TravelCardView {
         let output = DateFormatter()
         output.dateFormat = "HH:mm"
         output.locale = Locale(identifier: "ru_RU")
+
         return output.string(from: date)
     }
-    
+
     func formatDate(_ iso: String?) -> String {
         guard let iso else { return "" }
-        
+
         let input = DateFormatter()
         input.dateFormat = "yyyy-MM-dd"
         input.locale = Locale(identifier: "en_US_POSIX")
@@ -164,6 +174,7 @@ private extension TravelCardView {
             print("Failed to parse date:", iso)
             return ""
         }
+
         let output = DateFormatter()
         output.locale = Locale(identifier: "ru_RU")
         output.dateFormat = "d MMMM"

@@ -1,13 +1,21 @@
 import SwiftUI
 
 struct ApplyTimeFilterButton: View {
+
+    // MARK: - Public Properties
+
     let action: () -> Void
+
+    // MARK: - Visual Components
+
     var body: some View {
         button
             .padding(.horizontal, 16)
             .padding(.bottom, 24)
     }
-    
+
+    // MARK: - Private Methods
+
     private var button: some View {
         Button(action: action) {
             Text("Применить")
@@ -20,6 +28,8 @@ struct ApplyTimeFilterButton: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     ApplyTimeFilterButton {

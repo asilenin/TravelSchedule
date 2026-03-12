@@ -1,9 +1,14 @@
 import SwiftUI
 
 struct TravelRadioButtonView: View {
+
+    // MARK: - Public Properties
+
     let title: String
     let isSelected: Bool
     let action: () -> Void
+
+    // MARK: - Visual Components
 
     var body: some View {
         Button(action: action) {
@@ -11,7 +16,9 @@ struct TravelRadioButtonView: View {
                 Text(title)
                     .font(.system(size: 17, weight: .regular))
                     .foregroundColor(.primary)
+
                 Spacer()
+
                 Image(systemName: isSelected ? "record.circle" : "circle")
                     .font(.title2)
                     .foregroundColor(.primary)
@@ -19,6 +26,6 @@ struct TravelRadioButtonView: View {
             .contentShape(Rectangle())
             .padding(.vertical, 8)
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
     }
 }

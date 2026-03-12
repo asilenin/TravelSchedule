@@ -1,8 +1,13 @@
 import SwiftUI
 
 struct SplashScreen: View {
+
+    // MARK: - Private Properties
+
     @State private var isActive = false
     @EnvironmentObject var container: AppContainer
+
+    // MARK: - Visual Components
 
     var body: some View {
         if isActive {
@@ -30,6 +35,8 @@ struct SplashScreen: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     SplashScreen()
