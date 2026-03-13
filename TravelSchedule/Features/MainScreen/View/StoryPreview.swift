@@ -1,0 +1,57 @@
+import SwiftUI
+
+struct StoryPreview: View {
+
+    // MARK: - Public Properties
+
+    let story: StoryModel
+    let onStoryTap: (Int) -> Void
+    let currentIndex: Int
+
+    // MARK: - Visual Components
+
+    var body: some View {
+        Button(
+            action: {
+                onStoryTap(currentIndex)
+            }
+        ) {
+            ZStack(alignment: .bottomLeading) {
+                Image(story.imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 92, height: 140)
+                    .cornerRadius(16)
+                    .overlay(
+                        !story.isSeen
+                        ? RoundedRectangle(cornerRadius: 16)
+                            .stroke(.blueUniversalTS, lineWidth: 4)
+                        : nil
+                    )
+                    .opacity(story.isSeen ? 0.5 : 1)
+
+                Text(story.title)
+                    .font(.system(size: 12))
+                    .kerning(0.4)
+                    .foregroundColor(.whiteUniversalTS)
+                    .lineLimit(3)
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 12)
+            }
+            .frame(width: 92, height: 140)
+        }
+    }
+}
+
+// MARK: - Preview
+
+#Preview {
+    let stories = MockStories.stories
+
+    StoryPreview(
+        story: stories[0],
+        onStoryTap: { _ in },
+        currentIndex: 0
+    )
+}

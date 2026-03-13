@@ -426,6 +426,12 @@ components:
         duration:
           type: integer
           description: Длительность рейса в секундах
+        start_date:
+          type: string
+          description: Дата отправления рейса (YYYY-MM-DD)
+        transfers:
+          type: integer
+          description: Количество пересадок
     Pagination:
       type: object
       properties:
@@ -844,4 +850,3 @@ components:
           type: string
         logo_hm:
           type: string
-
